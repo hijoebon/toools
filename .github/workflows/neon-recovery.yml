@@ -2,9 +2,19 @@ name: Neon recovery and publication
 
 on:
   schedule:
-    # UTC: first attempt is 2026-11-01 08:07 in Asia/Shanghai.
-    # The year and exact recovery window are also enforced by the entrypoint.
-    - cron: '7,22,37,52 * 1-3 11 *'
+    # UTC: 08:08 Asia/Shanghai on the first slot. The minute list was shifted
+    # once on 2026-11-01 so GitHub would register the schedule again; the
+    # original expression never created a run. The entrypoint still enforces
+    # the year and the recovery window.
+    - cron: '8,23,38,53 * 1-3 11 *'
+  # workflow_dispatch is not available to the cloud-agent token. A push of
+  # this file to main runs preflight, then recover when that preflight passes
+  # and the clock is inside the recovery window.
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/neon-recovery.yml
   workflow_dispatch:
     inputs:
       mode:
@@ -35,18 +45,21 @@ jobs:
         id: invocation
         env:
           EVENT_NAME: ${{ github.event_name }}
-          REQUESTED_MODE: ${{ inputs.mode || 'preflight' }}
+          REQUESTED_MODE: ${{ github.event.inputs.mode }}
         run: |
           node <<'NODE'
           const fs = require('node:fs');
           const scheduled = process.env.EVENT_NAME === 'schedule';
+          const pushed = process.env.EVENT_NAME === 'push';
           const now = Date.now();
           const inWindow = now >= Date.parse('2026-11-01T00:00:00Z') &&
             now < Date.parse('2026-11-04T00:00:00Z');
           const run = !scheduled || inWindow;
-          const mode = scheduled ? 'recover' : process.env.REQUESTED_MODE;
+          const requested = process.env.REQUESTED_MODE || 'preflight';
+          const mode = scheduled ? 'recover' : (pushed ? 'preflight' : requested);
           if (!['preflight', 'recover'].includes(mode)) throw new Error('Invalid recovery mode');
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, `run=${run}\nmode=${mode}\n`);
+          const continueMode = pushed && inWindow ? 'recover' : '';
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `run=${run}\nmode=${mode}\ncontinue=${continueMode}\n`);
           if (!run) console.log('Scheduled recovery is outside its 2026 recovery window; skipped.');
           NODE
 
@@ -80,8 +93,21 @@ jobs:
           # GITHUB_SHA and GITHUB_REPOSITORY are provided by the Actions runner.
         run: npm run recovery:cloud -- --mode "$RECOVERY_MODE"
 
+      - name: Continue with time-gated recovery after push preflight
+        id: pushed_recover
+        if: steps.invocation.outputs.continue == 'recover'
+        env:
+          RECOVERY_MODE: recover
+          CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
+          CLOUD_VERCEL_TOKEN: ${{ secrets.CLOUD_VERCEL_TOKEN }}
+          CLOUD_DATABASE_TEMPLATE: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
+          REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run recovery:cloud -- --mode "$RECOVERY_MODE"
+
       - name: Reclaim only this run's temporary validation branch
-        if: always() && steps.invocation.outputs.run == 'true' && steps.invocation.outputs.mode == 'recover'
+        if: always() && steps.invocation.outputs.run == 'true' && (steps.invocation.outputs.mode == 'recover' || steps.pushed_recover.outcome == 'success' || steps.pushed_recover.outcome == 'failure')
         env:
           CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
         run: npm run recovery:cloud -- --cleanup
