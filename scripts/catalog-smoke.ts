@@ -1,10 +1,16 @@
 import { Client } from "pg";
 import { pgPoolConfig } from "../src/lib/database-url";
 import { CLOUD_RECOVERY_TARGET } from "./lib/cloud-recovery";
-import { catalogReadDecision, connectionFailureKind } from "./lib/catalog-smoke";
+import { catalogReadDecision, connectionFailureHints, connectionFailureKind } from "./lib/catalog-smoke";
 
 const KNOWN_SLUG = "chatgpt";
 const MISSING_SLUG = "missing-xyz";
+
+function errorText(error: unknown): string {
+  if (!error || typeof error !== "object") return "";
+  const record = error as { message?: unknown; detail?: unknown; hint?: unknown; routine?: unknown };
+  return [record.message, record.detail, record.hint, record.routine].filter((item) => typeof item === "string").join(" ");
+}
 
 function mask(value: string) {
   if (process.env.GITHUB_ACTIONS === "true" && value) {
@@ -70,9 +76,10 @@ async function main() {
     client = await connect(databaseUrl);
   } catch (error) {
     const code = error && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : "error";
-    const message = error instanceof Error ? error.message : "";
+    const message = errorText(error);
     console.log(`smoke_connect=${code}`);
     console.log(`smoke_connect_kind=${connectionFailureKind(message)}`);
+    console.log(`smoke_connect_hints=${connectionFailureHints(message)}`);
     const apiKey = process.env.CLOUD_NEON_API_KEY || "";
     if (code !== "28P01" || !apiKey) {
       process.exitCode = 1;
@@ -90,9 +97,10 @@ async function main() {
       client = await connect(rotated.toString());
     } catch (retryError) {
       const retryCode = retryError && typeof retryError === "object" && "code" in retryError && typeof retryError.code === "string" ? retryError.code : "error";
-      const retryMessage = retryError instanceof Error ? retryError.message : "";
+      const retryMessage = errorText(retryError);
       console.log(`smoke_connect=${retryCode}`);
       console.log(`smoke_connect_kind=${connectionFailureKind(retryMessage)}`);
+      console.log(`smoke_connect_hints=${connectionFailureHints(retryMessage)}`);
       process.exitCode = 1;
       return;
     }

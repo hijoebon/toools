@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { catalogReadDecision, connectionFailureKind } from "./catalog-smoke";
+import { catalogReadDecision, connectionFailureHints, connectionFailureKind } from "./catalog-smoke";
 
 test("connection failures stay as safe kinds", () => {
   assert.equal(connectionFailureKind("connection is insecure (try using `sslmode=require`)"), "insecure");
@@ -8,6 +8,8 @@ test("connection failures stay as safe kinds", () => {
   assert.equal(connectionFailureKind("channel binding required, but SSL not in use"), "channel-binding");
   assert.equal(connectionFailureKind("self-signed certificate"), "certificate");
   assert.equal(connectionFailureKind("connect ECONNREFUSED 127.0.0.1:5432"), "network");
+  assert.equal(connectionFailureKind("no pg_hba.conf entry, no encryption"), "encryption");
+  assert.equal(connectionFailureKind("endpoint is disabled"), "endpoint");
   assert.equal(connectionFailureKind("something unexpected"), "other");
 });
 
