@@ -145,6 +145,26 @@ jobs:
             } finally {
               try { await normalizedClient.end(); } catch {}
             }
+            const parse = require('pg-connection-string').parse;
+            try {
+              const parsedConfig = parse(template);
+              const ssl = parsedConfig.ssl;
+              const kind = ssl === undefined ? 'undefined' : ssl === false ? 'false' : ssl === true ? 'true' : typeof ssl;
+              console.log(`parsed_ssl=${kind}`);
+            } catch { console.log('parsed_ssl=threw'); }
+            console.log(`sslmode_count=${parsed.searchParams.getAll('sslmode').length}`);
+            const forcedUrl = new URL(template);
+            forcedUrl.searchParams.delete('sslmode');
+            const forced = new Client({ connectionString: forcedUrl.toString(), ssl: { rejectUnauthorized: true }, connectionTimeoutMillis: 15000 });
+            try {
+              await forced.connect();
+              await forced.query('SELECT 1');
+              console.log('forced_auth=ok');
+            } catch (error) {
+              console.log(`forced_auth=${error && error.code ? error.code : 'error'}`);
+            } finally {
+              try { await forced.end(); } catch {}
+            }
             const key = process.env.CLOUD_NEON_API_KEY || '';
             if (!key) { console.log('reveal=missing_key'); return; }
             let response;

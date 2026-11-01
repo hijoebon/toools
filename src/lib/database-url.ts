@@ -29,3 +29,17 @@ export function getDatabaseUrl(): string {
   }
   return normalizePgSslMode(url);
 }
+
+/**
+ * Rewriting `sslmode` is not enough for the stored Neon URL: `pg` 8.21 still
+ * opened it in cleartext (`28000`) after the value became `verify-full`.
+ * Remove every `sslmode` parameter and set `ssl` on the pool so the driver's
+ * connection-string parser cannot replace that choice with cleartext.
+ */
+export function pgPoolConfig(url: string): { connectionString: string; ssl?: { rejectUnauthorized: true } } {
+  const normalized = normalizePgSslMode(url);
+  if (!isNeonHost(normalized)) return { connectionString: normalized };
+  const parsed = new URL(normalized);
+  parsed.searchParams.delete("sslmode");
+  return { connectionString: parsed.toString(), ssl: { rejectUnauthorized: true } };
+}
