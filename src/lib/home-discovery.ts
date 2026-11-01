@@ -15,15 +15,23 @@ function unique<T extends Identified>(items: T[]): T[] {
   return [...new Map(items.map((item) => [item.slug, item])).values()];
 }
 
+function createdTime(value: Date | string): number | null {
+  const time = new Date(value).getTime();
+  return Number.isFinite(time) ? time : null;
+}
+
 /** Recent means the latest cohort, never older records added for variety. */
 export function selectRecentPool<T extends RecentTool>(items: T[]): T[] {
-  const sorted = unique(items).sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
-  const newest = sorted[0] ? new Date(sorted[0].createdAt).getTime() : 0;
-  return sorted.filter(
-    (item) => new Date(item.createdAt).getTime() >= newest - 30 * 86_400_000,
-  );
+  const itemsBySlug = unique(items);
+  const dated = itemsBySlug.flatMap((item) => {
+    const time = createdTime(item.createdAt);
+    return time === null ? [] : [{ item, time }];
+  });
+  // A bad timestamp must not drop every other healthy listing.
+  if (!dated.length) return itemsBySlug;
+  dated.sort((a, b) => b.time - a.time);
+  const newest = dated[0].time;
+  return dated.filter((row) => row.time >= newest - 30 * 86_400_000).map((row) => row.item);
 }
 
 /** Circular batches fill trailing slots without repeating an item in a batch. */

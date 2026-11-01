@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/json-ld";
 import { CatalogDegraded } from "@/components/catalog-degraded";
-import { breadcrumbData, pageMetadata } from "@/lib/seo";
+import { breadcrumbData, categoryPageDescription, pageMetadata } from "@/lib/seo";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToolGrid } from "@/components/tool-grid";
@@ -49,7 +49,7 @@ export async function generateMetadata({
 
   return pageMetadata(
     `${category.name} Tools`,
-    category.description || `Browse ${category.name} tools and compare options on Toools.`,
+    categoryPageDescription({ name: category.name, description: category.description, count: category._count.tools }),
     `/categories/${category.slug}`,
     { index: category._count.tools > 0 },
   );

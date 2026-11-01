@@ -61,6 +61,9 @@ export function Footer() {
               >
                 GitHub Repository
               </a>
+              <a href="/llms.txt" className="text-muted-foreground transition-colors hover:text-foreground">
+                llms.txt
+              </a>
             </div>
           </nav>
         </div>

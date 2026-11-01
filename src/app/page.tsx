@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { connection } from "next/server";
 import { JsonLd } from "@/components/json-ld";
-import { siteUrl } from "@/lib/seo";
-import { SITE_DESCRIPTION, SITE_NAME, GITHUB_REPO_URL } from "@/lib/site";
+import { siteUrl, websiteJsonLd } from "@/lib/seo";
+import { catalogOr } from "@/lib/catalog-fallback";
 
-export const metadata = { alternates: { canonical: siteUrl() } };
+export const metadata = { alternates: { canonical: siteUrl(), types: { "text/plain": siteUrl("/llms.txt") } } };
 import { ArrowRight, Search } from "lucide-react";
 import { stackPreviews } from "@/lib/stacks-data";
 import { getEditorialDay } from "@/lib/home-discovery";
@@ -38,7 +38,7 @@ const getFeaturedTools = catalogCache(async () => {
   return tools.map((tool) => ({ ...tool, createdAt: tool.createdAt.toISOString() }));
 }, "home-featured", { metrics: true });
 
-const getRecentTools = catalogCache(async () => {
+async function queryRecentTools() {
   const tools = await prisma.tool.findMany({
     where: { status: "APPROVED" },
     select: homeToolSelect,
@@ -46,7 +46,9 @@ const getRecentTools = catalogCache(async () => {
     take: 36,
   });
   return tools.map((tool) => ({ ...tool, createdAt: tool.createdAt.toISOString() }));
-}, "home-recent", { metrics: true });
+}
+
+const getRecentTools = catalogCache(queryRecentTools, "home-recent", { metrics: true });
 
 function HeroIntro() {
   return (
@@ -135,11 +137,17 @@ export default async function HomePage() {
   // Keep the daily editorial seed tied to the request, independently of the
   // database snapshot's lifetime.
   await connection();
-  const [featuredTools, recentTools, categories] = await Promise.all([
-    getFeaturedTools().catch(() => []),
-    getRecentTools().catch(() => []),
-    getCatalogCategories().catch(() => []),
+  const [featuredRead, recentCached, categoriesRead] = await Promise.all([
+    catalogOr(() => getFeaturedTools(), []),
+    catalogOr(() => getRecentTools(), []),
+    catalogOr(() => getCatalogCategories(), []),
   ]);
+  // A failed cache read is not an empty catalog. Read the database once more
+  // before telling visitors that recent additions are unavailable.
+  const recentRead = recentCached.degraded ? await catalogOr(queryRecentTools, []) : recentCached;
+  const featuredTools = featuredRead.value;
+  const recentTools = recentRead.value;
+  const categories = categoriesRead.value;
   const day = getEditorialDay();
   const workflows = stackPreviews.map((stack) => ({
     slug: stack.slug,
@@ -156,34 +164,12 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      <JsonLd
-        data={{
-          "@context": "https://schema.org",
-          "@graph": [
-            {
-              "@type": "WebSite",
-              "@id": `${siteUrl()}#website`,
-              name: SITE_NAME,
-              url: siteUrl(),
-              description: SITE_DESCRIPTION,
-              inLanguage: "en",
-              publisher: { "@id": `${siteUrl()}#publisher` },
-            },
-            {
-              "@type": "Organization",
-              "@id": `${siteUrl()}#publisher`,
-              name: SITE_NAME,
-              url: siteUrl(),
-              logo: siteUrl("/logo.svg"),
-              sameAs: [GITHUB_REPO_URL],
-            },
-          ],
-        }}
-      />
+      <JsonLd data={websiteJsonLd()} />
       <HomeDiscoverySections
         key={day + ":" + recentTools.map((tool) => tool.slug).join(":")}
         hero={<HeroIntro />}
         recentTools={recentTools}
+        recentUnavailable={recentRead.degraded}
         featuredTools={featuredTools}
         workflows={workflows}
         categories={categories.map((category) => ({

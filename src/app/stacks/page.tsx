@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { connection } from "next/server";
-import { pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { collectionPageJsonLd, pageMetadata } from "@/lib/seo";
 import { StackListCard } from "@/components/stack-list-card";
 import { getStacksForList } from "@/lib/stacks";
 
-export const metadata = pageMetadata(
-  "Tool Stacks",
-  "Complete tool chains curated for specific roles and workflows. Pick your scenario, get the whole toolkit.",
-  "/stacks",
-);
+const title = "Tool Stacks";
+const description = "Complete tool chains curated for specific roles and workflows. Pick your scenario, get the whole toolkit.";
+
+export const metadata = pageMetadata(title, description, "/stacks");
 
 export default async function StacksListPage() {
   await connection();
@@ -16,6 +16,12 @@ export default async function StacksListPage() {
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
+      <JsonLd data={collectionPageJsonLd({
+        path: "/stacks",
+        name: title,
+        description,
+        items: stacks.map((stack) => ({ name: stack.name, path: `/stacks/${stack.slug}` })),
+      })} />
       <div className="pt-10 pb-2">
         <h1 className="text-[clamp(1.5rem,3.5vw,2.25rem)] font-extrabold tracking-[-0.03em]">
           Tool Stacks

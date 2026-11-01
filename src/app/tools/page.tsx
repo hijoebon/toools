@@ -8,7 +8,7 @@ import { Pagination } from "@/components/pagination";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
-import { pageMetadata, toolsSearchPolicy, TOOLS_PAGE_SIZE, type ToolsSearchParams } from "@/lib/seo";
+import { pageMetadata, toolsListingCopy, toolsSearchPolicy, TOOLS_PAGE_SIZE, type ToolsSearchParams } from "@/lib/seo";
 import { toolSourceWhere } from "@/lib/tool-sources";
 import { catalogCache } from "@/lib/catalog-cache";
 import { catalogOr } from "@/lib/catalog-fallback";
@@ -41,11 +41,11 @@ export async function resolveToolsListingMeta(raw: ToolsSearchParams) {
 
 export async function generateMetadata({ searchParams }: ToolsPageProps): Promise<Metadata> {
   await connection();
-  const meta = await resolveToolsListingMeta(await searchParams);
+  const raw = await searchParams;
+  const meta = await resolveToolsListingMeta(raw);
   if (meta.notFound) notFound();
-  return pageMetadata(meta.page > 1 ? `Browse Tools — Page ${meta.page}` : "Browse Tools",
-    "Search and filter curated tools by source, category, pricing, platform, open-source status, and trust signals.",
-    meta.path, { index: meta.index });
+  const copy = toolsListingCopy(toolsSearchPolicy(raw).params, meta.page);
+  return pageMetadata(copy.title, copy.description, meta.path, { index: meta.index });
 }
 
 function buildWhere(params: {
