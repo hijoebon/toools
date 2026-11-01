@@ -13,6 +13,12 @@ test("connection failures stay as safe kinds", () => {
   assert.equal(connectionFailureKind("something unexpected"), "other");
 });
 
+test("failure hints stay inside a fixed word list", () => {
+  assert.equal(connectionFailureHints("connection is insecure (try using `sslmode=require`)"), "insecure,sslmode,ssl");
+  assert.equal(connectionFailureHints("no pg_hba.conf entry, no encryption"), "encryption");
+  assert.equal(connectionFailureHints("unrecognized"), "none");
+});
+
 test("catalog smoke passes only when the known slug exists and the missing slug does not", () => {
   assert.equal(catalogReadDecision("ChatGPT", null), "pass");
   assert.equal(catalogReadDecision(null, null), "known-missing");
