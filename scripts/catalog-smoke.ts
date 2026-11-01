@@ -32,11 +32,13 @@ async function connect(url: string): Promise<Client> {
   return client;
 }
 
-async function neonRequest(apiKey: string, path: string, init: RequestInit = {}): Promise<{ ok: boolean; status: number; body: unknown }> {
+// The smoke test has no management write path. A disabled endpoint is an
+// intentional security/operations state and must be preserved by diagnostics.
+async function neonRequest(apiKey: string, path: string): Promise<{ ok: boolean; status: number; body: unknown }> {
   const response = await fetch(`https://console.neon.tech/api/v2${path}`, {
-    ...init,
+    method: "GET",
     headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json", "Content-Type": "application/json" },
-    signal: AbortSignal.timeout(20_000),
+    signal: AbortSignal.timeout(20_000), redirect: "error",
   });
   return { ok: response.ok, status: response.status, body: await response.json().catch(() => null) };
 }
@@ -47,8 +49,7 @@ function endpointDisabled(body: unknown): boolean | null {
   return typeof endpoint?.disabled === "boolean" ? endpoint.disabled : null;
 }
 
-/** Re-enable only a disabled endpoint. Does not rotate passwords or change Vercel. */
-async function ensureEndpointEnabled(apiKey: string): Promise<boolean> {
+async function verifyEndpointEnabled(apiKey: string): Promise<boolean> {
   const target = CLOUD_RECOVERY_TARGET;
   const path = `/projects/${target.projectId}/endpoints/${target.endpointId}`;
   const current = await neonRequest(apiKey, path);
@@ -57,40 +58,24 @@ async function ensureEndpointEnabled(apiKey: string): Promise<boolean> {
     return false;
   }
   const disabled = endpointDisabled(current.body);
-  console.log(`endpoint_disabled=${disabled === null ? "unknown" : disabled}`);
-  if (disabled !== true) return true;
-  if (process.env.CATALOG_SMOKE_ENABLE_ENDPOINT !== "true") return false;
-  const enabled = await neonRequest(apiKey, path, { method: "PATCH", body: JSON.stringify({ endpoint: { disabled: false } }) });
-  if (!enabled.ok) {
-    console.log(`endpoint_enable=http_${enabled.status}`);
+  if (disabled !== false) {
+    console.log(`smoke_control_plane=${disabled === true ? "endpoint_disabled" : "endpoint_state_unknown"}`);
     return false;
   }
-  const deadline = Date.now() + 30_000;
-  while (Date.now() < deadline) {
-    const again = await neonRequest(apiKey, path);
-    if (again.ok && endpointDisabled(again.body) === false) {
-      console.log("endpoint_disabled=false");
-      return true;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 2_000));
-  }
-  console.log("endpoint_enable=pending");
-  return false;
+  console.log("endpoint_disabled=false");
+  return true;
 }
 
 async function revealedPassword(apiKey: string): Promise<string | null> {
   const target = CLOUD_RECOVERY_TARGET;
-  const response = await fetch(
-    `https://console.neon.tech/api/v2/projects/${target.projectId}/branches/${target.branchId}/roles/${target.role}/reveal_password`,
-    { headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json" }, signal: AbortSignal.timeout(15_000) },
-  );
+  const response = await neonRequest(apiKey, `/projects/${target.projectId}/branches/${target.branchId}/roles/${target.role}/reveal_password`);
   if (!response.ok) {
     console.log(`reveal=http_${response.status}`);
     return null;
   }
-  const body = await response.json().catch(() => null) as { password?: unknown; role?: { password?: unknown } } | null;
+  const body = response.body as { password?: unknown; role?: { password?: unknown } } | null;
   const password = body?.password ?? body?.role?.password;
-  if (typeof password !== "string") {
+  if (typeof password !== "string" || !password) {
     console.log("reveal=unexpected");
     return null;
   }
@@ -115,46 +100,41 @@ async function main() {
   }
   mask(decodeURIComponent(parsed.password));
   const apiKey = process.env.CLOUD_NEON_API_KEY || "";
-  if (apiKey && !(await ensureEndpointEnabled(apiKey))) {
-    process.exitCode = 1;
-    return;
+  let connectionUrl = databaseUrl;
+  if (apiKey) {
+    const target = CLOUD_RECOVERY_TARGET;
+    if (!["postgres:", "postgresql:"].includes(parsed.protocol)
+      || !new Set<string>([target.hostname, target.pooledHostname]).has(parsed.hostname)
+      || decodeURIComponent(parsed.username) !== target.role || parsed.pathname !== `/${target.database}`) {
+      console.log("database_url=target_mismatch");
+      process.exitCode = 1;
+      return;
+    }
+    // The durable recovery template can intentionally contain a revoked password.
+    // Resolve the current management password before any SQL connection attempt.
+    const password = await revealedPassword(apiKey);
+    if (!password || !(await verifyEndpointEnabled(apiKey))) {
+      process.exitCode = 1;
+      return;
+    }
+    const current = new URL(databaseUrl);
+    current.password = password;
+    connectionUrl = current.toString();
   }
-  const config = pgPoolConfig(databaseUrl);
+  const config = pgPoolConfig(connectionUrl);
   console.log(`pool_ssl=${config.ssl ? "true" : "false"}`);
 
   let client: Client;
   try {
-    client = await connect(databaseUrl);
+    client = await connect(connectionUrl);
   } catch (error) {
     const code = error && typeof error === "object" && "code" in error && typeof error.code === "string" ? error.code : "error";
     const message = errorText(error);
     console.log(`smoke_connect=${code}`);
     console.log(`smoke_connect_kind=${connectionFailureKind(message)}`);
     console.log(`smoke_connect_hints=${connectionFailureHints(message)}`);
-    const apiKey = process.env.CLOUD_NEON_API_KEY || "";
-    if (code !== "28P01" || !apiKey) {
-      process.exitCode = 1;
-      return;
-    }
-    const password = await revealedPassword(apiKey);
-    if (!password) {
-      process.exitCode = 1;
-      return;
-    }
-    const rotated = new URL(databaseUrl);
-    rotated.password = password;
-    console.log(`password_matches_template=${password === decodeURIComponent(parsed.password)}`);
-    try {
-      client = await connect(rotated.toString());
-    } catch (retryError) {
-      const retryCode = retryError && typeof retryError === "object" && "code" in retryError && typeof retryError.code === "string" ? retryError.code : "error";
-      const retryMessage = errorText(retryError);
-      console.log(`smoke_connect=${retryCode}`);
-      console.log(`smoke_connect_kind=${connectionFailureKind(retryMessage)}`);
-      console.log(`smoke_connect_hints=${connectionFailureHints(retryMessage)}`);
-      process.exitCode = 1;
-      return;
-    }
+    process.exitCode = 1;
+    return;
   }
 
   try {

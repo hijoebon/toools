@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile, readdir } from "node:fs/promises";
 import { PGlite } from "@electric-sql/pglite";
+import { Client } from "pg";
 import { CLOUD_RECOVERY_NOT_BEFORE, CLOUD_RECOVERY_TARGET } from "./cloud-recovery";
 import { CloudDatabaseError, createCloudDatabase, type CloudDatabaseStage, type RecoveryDatabaseConnection } from "./cloud-database";
 
@@ -11,7 +12,7 @@ const branchId = "br-validation-owned";
 const hostname = "ep-validation-owned.c-3.us-west-2.aws.neon.tech";
 const isolated = `postgresql://neondb_owner:dummy-test-password@${hostname}/neondb?sslmode=require`;
 
-function mockApi(options: { lostCreate?: boolean; wrongParent?: boolean; badUri?: boolean; failedOperation?: boolean; cleanupFail?: boolean } = {}) {
+function mockApi(options: { lostCreate?: boolean; wrongParent?: boolean; badUri?: boolean; failedOperation?: boolean; cleanupFail?: boolean; connectionUri?: string } = {}) {
   let created = false;
   let deleted = false;
   let deletes = 0;
@@ -47,7 +48,7 @@ function mockApi(options: { lostCreate?: boolean; wrongParent?: boolean; badUri?
       assert.equal(url.searchParams.get("endpoint_id"), "ep-validation-owned");
       assert.equal(url.searchParams.get("pooled"), "false");
       assert.equal(url.searchParams.get("role_name"), "neondb_owner");
-      return response({ uri: options.badUri ? production : isolated });
+      return response({ uri: options.badUri ? production : options.connectionUri ?? isolated });
     }
     throw new Error("unexpected mock request");
   };
@@ -130,6 +131,27 @@ test("production uses direct migrate deploy and publication without synthetic me
     assert.deepEqual((await fixture.postgres.query('SELECT count(*)::integer AS count FROM "ToolMetricReceipt"')).rows, [{ count: 0 }]);
     assert.equal(fixture.closed(), 1);
   } finally { await fixture.postgres.close(); }
+});
+
+test("the recovery connection enforces verified Neon TLS when the API URI has no sslmode", async (t) => {
+  const api = mockApi({ connectionUri: isolated.replace("?sslmode=require", "") });
+  let parameters: { ssl: unknown; host: string; connect_timeout: number; statement_timeout: number } | undefined;
+  t.mock.method(Client.prototype, "connect", async function (this: Client) {
+    parameters = (this as unknown as { connectionParameters: NonNullable<typeof parameters> }).connectionParameters;
+    // No real socket is opened. Capture the driver's effective parsed options,
+    // then exercise the normal safe failure and temporary-branch cleanup path.
+    throw new Error("Offline connection test");
+  });
+  t.mock.method(Client.prototype, "end", async () => {});
+  await assert.rejects(createCloudDatabase({ fetcher: api.fetcher, now: () => CLOUD_RECOVERY_NOT_BEFORE,
+    migrate: async () => {},
+  }).validateOnTemporaryBranch({ databaseUrl: production, neonApiKey: "dummy-neon-key", branchName }), hasCode("database_connection_failed"));
+  assert.ok(parameters);
+  assert.deepEqual(parameters.ssl, { rejectUnauthorized: true });
+  assert.equal(parameters.host, hostname);
+  assert.equal(parameters.connect_timeout, 20);
+  assert.equal(parameters.statement_timeout, 120_000);
+  assert.deepEqual(api.state(), { created: true, deleted: true, deletes: 1 });
 });
 
 test("a lost branch creation response is reconciled by the exact run-owned name and cleaned up", async () => {

@@ -34,18 +34,16 @@ jobs:
         env:
           CLOUD_DATABASE_TEMPLATE: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
           CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          CLOUD_VERCEL_TOKEN: ${{ secrets.CLOUD_VERCEL_TOKEN }}
         run: |
           node <<'NODE'
-          for (const name of ['CLOUD_DATABASE_TEMPLATE', 'CLOUD_NEON_API_KEY', 'CLOUD_VERCEL_TOKEN']) {
+          for (const name of ['CLOUD_DATABASE_TEMPLATE', 'CLOUD_NEON_API_KEY']) {
             console.log(`${name}=${process.env[name] ? 'present' : 'missing'}`);
           }
           if (!process.env.CLOUD_DATABASE_TEMPLATE) process.exit(1);
           NODE
 
-      - name: Prove catalog reads before any production deploy
+      - name: Prove catalog reads without changing endpoint state or credentials
         env:
           DATABASE_URL: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
           CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          CATALOG_SMOKE_ENABLE_ENDPOINT: 'true'
         run: npm exec tsx scripts/catalog-smoke.ts
