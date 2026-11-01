@@ -1464,6 +1464,18 @@ const tools: ToolDef[] = [
     platforms: ["Web", "macOS", "Windows", "iOS", "Android"],
     tags: ["Task Management", "Collaboration"],
   },
+  {
+    name: "Yap",
+    tagline: "On-device dictation that types speech into the app you are using",
+    description:
+      "Yap is a dictation app that types speech at the text cursor in the app you are using. Public pages document Apple Silicon Macs (M1 and later, with no Intel build), Windows 10 and 11 including a native Arm build, and iPhone and Android. The Windows and Android pages say recognition uses NVIDIA's Parakeet model on the device; the Mac pages say recognition runs on the Mac and audio is not uploaded. The provider lists 25 languages and detects the spoken language for each recording. A free account includes 3 days without a card, then a 10-day trial that requires a card, then USD 6.90 per month or USD 69 per year. The first launch, activation, and periodic access checks need an internet connection, and offline use stays within the current access period. Reviewed from public documentation on 2026-11-01; this is not a hands-on accuracy test.",
+    url: "https://yapapp.cc/",
+    category: "productivity",
+    pricing: "PAID",
+    platforms: ["macOS", "Windows", "iOS", "Android"],
+    isOpenSource: false,
+    tags: ["AI", "Writing", "Audio"],
+  },
 
   // ===== API & Integration =====
   {
