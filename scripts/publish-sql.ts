@@ -2,6 +2,7 @@ import "dotenv/config";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Client } from "pg";
+import { pgPoolConfig } from "../src/lib/database-url";
 import { refreshCatalog, refreshConfiguration } from "./lib/catalog-publication";
 
 async function main() {
@@ -16,7 +17,8 @@ async function main() {
   const configuration = refreshConfiguration();
   const sql = await readFile(resolve(args[1]), "utf8");
   if (!sql.trim()) throw new Error("SQL file is empty");
-  const client = new Client({ connectionString: process.env.DATABASE_URL, connectionTimeoutMillis: 15_000 });
+  // Neon rejects a cleartext session. Use the same TLS client options as catalog reads.
+  const client = new Client({ ...pgPoolConfig(process.env.DATABASE_URL), connectionTimeoutMillis: 15_000 });
   let submitted = false;
   try {
     await client.connect();
