@@ -110,6 +110,16 @@ jobs:
             try { parsed = new URL(template); }
             catch { console.log('template_url=invalid'); return; }
             mask(decodeURIComponent(parsed.password || ''));
+            const host = parsed.hostname;
+            const neon = host === 'neon.tech' || host.endsWith('.neon.tech');
+            const known = host === 'ep-weathered-shape-aky91jmc.c-3.us-west-2.aws.neon.tech'
+              || host === 'ep-weathered-shape-aky91jmc-pooler.c-3.us-west-2.aws.neon.tech';
+            console.log(`template_host=${known ? 'known' : (neon ? 'other-neon' : 'other')}`);
+            const ssl = parsed.searchParams.get('sslmode');
+            const allowed = ['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'];
+            console.log(`template_sslmode=${ssl == null ? 'absent' : (allowed.includes(ssl) ? ssl : 'other')}`);
+            console.log(`template_role_owner=${decodeURIComponent(parsed.username) === 'neondb_owner'}`);
+            console.log(`template_database_neondb=${decodeURIComponent(parsed.pathname.replace(/^\//, '')) === 'neondb'}`);
             const client = new Client({ connectionString: template, connectionTimeoutMillis: 15000 });
             try {
               await client.connect();
@@ -119,6 +129,21 @@ jobs:
               console.log(`template_auth=${error && error.code ? error.code : 'error'}`);
             } finally {
               try { await client.end(); } catch {}
+            }
+            const normalized = !neon
+              ? template.replace(/([?&])sslmode=(prefer|require|verify-ca)(?=(&|$))/i, '$1sslmode=verify-full')
+              : (/[?&]sslmode=/i.test(template)
+                ? template.replace(/([?&])sslmode=[^&]*/i, '$1sslmode=verify-full')
+                : `${template}${template.includes('?') ? '&' : '?'}sslmode=verify-full`);
+            const normalizedClient = new Client({ connectionString: normalized, connectionTimeoutMillis: 15000 });
+            try {
+              await normalizedClient.connect();
+              await normalizedClient.query('SELECT 1');
+              console.log('template_auth_normalized=ok');
+            } catch (error) {
+              console.log(`template_auth_normalized=${error && error.code ? error.code : 'error'}`);
+            } finally {
+              try { await normalizedClient.end(); } catch {}
             }
             const key = process.env.CLOUD_NEON_API_KEY || '';
             if (!key) { console.log('reveal=missing_key'); return; }
