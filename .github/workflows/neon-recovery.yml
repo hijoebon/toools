@@ -7,18 +7,10 @@ on:
     # original expression never created a run. The entrypoint still enforces
     # the year and the recovery window.
     - cron: '8,23,38,53 * 1-3 11 *'
-  # workflow_dispatch is not available to the cloud-agent token. A push of
-  # this file to main runs preflight, then recover when that preflight passes
-  # and the clock is inside the recovery window.
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/neon-recovery.yml
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Preflight checks credentials without changing production. Recover is time-gated.'
+        description: 'Preflight checks credentials without changing production. Recover is time-gated and runs only after the catalog smoke.'
         required: true
         default: preflight
         type: choice
@@ -50,16 +42,13 @@ jobs:
           node <<'NODE'
           const fs = require('node:fs');
           const scheduled = process.env.EVENT_NAME === 'schedule';
-          const pushed = process.env.EVENT_NAME === 'push';
           const now = Date.now();
           const inWindow = now >= Date.parse('2026-11-01T00:00:00Z') &&
             now < Date.parse('2026-11-04T00:00:00Z');
           const run = !scheduled || inWindow;
-          const requested = process.env.REQUESTED_MODE || 'preflight';
-          const mode = scheduled ? 'recover' : (pushed ? 'preflight' : requested);
+          const mode = scheduled ? 'recover' : (process.env.REQUESTED_MODE || 'preflight');
           if (!['preflight', 'recover'].includes(mode)) throw new Error('Invalid recovery mode');
-          const continueMode = pushed && inWindow ? 'recover' : '';
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, `run=${run}\nmode=${mode}\ncontinue=${continueMode}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `run=${run}\nmode=${mode}\n`);
           if (!run) console.log('Scheduled recovery is outside its 2026 recovery window; skipped.');
           NODE
 
@@ -80,6 +69,14 @@ jobs:
         if: steps.invocation.outputs.run == 'true'
         run: npm ci --no-audit --no-fund
 
+      - name: Prove catalog reads before any production rewrite
+        if: steps.invocation.outputs.run == 'true'
+        env:
+          DATABASE_URL: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
+          CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
+          CATALOG_SMOKE_ENABLE_ENDPOINT: 'true'
+        run: npm exec tsx scripts/catalog-smoke.ts
+
       - name: Run cloud recovery entrypoint
         if: steps.invocation.outputs.run == 'true'
         env:
@@ -93,110 +90,8 @@ jobs:
           # GITHUB_SHA and GITHUB_REPOSITORY are provided by the Actions runner.
         run: npm run recovery:cloud -- --mode "$RECOVERY_MODE"
 
-      - name: Classify credential mismatch without printing secrets
-        if: failure() && steps.invocation.outputs.mode == 'preflight'
-        env:
-          CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          CLOUD_DATABASE_TEMPLATE: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
-        run: |
-          node <<'NODE'
-          const { Client } = require('pg');
-          function mask(value) {
-            if (value) console.log(`::add-mask::${String(value).replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A')}`);
-          }
-          (async () => {
-            const template = process.env.CLOUD_DATABASE_TEMPLATE || '';
-            let parsed;
-            try { parsed = new URL(template); }
-            catch { console.log('template_url=invalid'); return; }
-            mask(decodeURIComponent(parsed.password || ''));
-            const host = parsed.hostname;
-            const neon = host === 'neon.tech' || host.endsWith('.neon.tech');
-            const known = host === 'ep-weathered-shape-aky91jmc.c-3.us-west-2.aws.neon.tech'
-              || host === 'ep-weathered-shape-aky91jmc-pooler.c-3.us-west-2.aws.neon.tech';
-            console.log(`template_host=${known ? 'known' : (neon ? 'other-neon' : 'other')}`);
-            const ssl = parsed.searchParams.get('sslmode');
-            const allowed = ['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'];
-            console.log(`template_sslmode=${ssl == null ? 'absent' : (allowed.includes(ssl) ? ssl : 'other')}`);
-            console.log(`template_role_owner=${decodeURIComponent(parsed.username) === 'neondb_owner'}`);
-            console.log(`template_database_neondb=${decodeURIComponent(parsed.pathname.replace(/^\//, '')) === 'neondb'}`);
-            const client = new Client({ connectionString: template, connectionTimeoutMillis: 15000 });
-            try {
-              await client.connect();
-              await client.query('SELECT 1');
-              console.log('template_auth=ok');
-            } catch (error) {
-              console.log(`template_auth=${error && error.code ? error.code : 'error'}`);
-            } finally {
-              try { await client.end(); } catch {}
-            }
-            const normalized = !neon
-              ? template.replace(/([?&])sslmode=(prefer|require|verify-ca)(?=(&|$))/i, '$1sslmode=verify-full')
-              : (/[?&]sslmode=/i.test(template)
-                ? template.replace(/([?&])sslmode=[^&]*/i, '$1sslmode=verify-full')
-                : `${template}${template.includes('?') ? '&' : '?'}sslmode=verify-full`);
-            const normalizedClient = new Client({ connectionString: normalized, connectionTimeoutMillis: 15000 });
-            try {
-              await normalizedClient.connect();
-              await normalizedClient.query('SELECT 1');
-              console.log('template_auth_normalized=ok');
-            } catch (error) {
-              console.log(`template_auth_normalized=${error && error.code ? error.code : 'error'}`);
-            } finally {
-              try { await normalizedClient.end(); } catch {}
-            }
-            const parse = require('pg-connection-string').parse;
-            try {
-              const parsedConfig = parse(template);
-              const ssl = parsedConfig.ssl;
-              const kind = ssl === undefined ? 'undefined' : ssl === false ? 'false' : ssl === true ? 'true' : typeof ssl;
-              console.log(`parsed_ssl=${kind}`);
-            } catch { console.log('parsed_ssl=threw'); }
-            console.log(`sslmode_count=${parsed.searchParams.getAll('sslmode').length}`);
-            const forcedUrl = new URL(template);
-            forcedUrl.searchParams.delete('sslmode');
-            const forced = new Client({ connectionString: forcedUrl.toString(), ssl: { rejectUnauthorized: true }, connectionTimeoutMillis: 15000 });
-            try {
-              await forced.connect();
-              await forced.query('SELECT 1');
-              console.log('forced_auth=ok');
-            } catch (error) {
-              console.log(`forced_auth=${error && error.code ? error.code : 'error'}`);
-            } finally {
-              try { await forced.end(); } catch {}
-            }
-            const key = process.env.CLOUD_NEON_API_KEY || '';
-            if (!key) { console.log('reveal=missing_key'); return; }
-            let response;
-            try {
-              response = await fetch('https://console.neon.tech/api/v2/projects/bitter-field-76784435/branches/br-shy-cake-akmhbjg9/roles/neondb_owner/reveal_password', {
-                headers: { Authorization: `Bearer ${key}`, Accept: 'application/json' },
-              });
-            } catch { console.log('reveal=request_failed'); return; }
-            if (!response.ok) { console.log(`reveal=http_${response.status}`); return; }
-            const body = await response.json().catch(() => null);
-            const password = body && (body.password || (body.role && body.role.password));
-            if (typeof password !== 'string') { console.log('reveal=unexpected'); return; }
-            mask(password);
-            console.log(`password_matches_template=${password === decodeURIComponent(parsed.password || '')}`);
-          })().catch(() => { console.log('classify_failed'); });
-          NODE
-
-      - name: Continue with time-gated recovery after push preflight
-        id: pushed_recover
-        if: steps.invocation.outputs.continue == 'recover'
-        env:
-          RECOVERY_MODE: recover
-          CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          CLOUD_VERCEL_TOKEN: ${{ secrets.CLOUD_VERCEL_TOKEN || secrets.VERCEL_TOKEN || secrets.VERCEL_ACCESS_TOKEN }}
-          CLOUD_DATABASE_TEMPLATE: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
-          REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
-          CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          GITHUB_TOKEN: ${{ github.token }}
-        run: npm run recovery:cloud -- --mode "$RECOVERY_MODE"
-
       - name: Reclaim only this run's temporary validation branch
-        if: always() && steps.invocation.outputs.run == 'true' && (steps.invocation.outputs.mode == 'recover' || steps.pushed_recover.outcome == 'success' || steps.pushed_recover.outcome == 'failure')
+        if: always() && steps.invocation.outputs.run == 'true' && steps.invocation.outputs.mode == 'recover'
         env:
           CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
         run: npm run recovery:cloud -- --cleanup
