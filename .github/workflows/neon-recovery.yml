@@ -85,7 +85,7 @@ jobs:
         env:
           RECOVERY_MODE: ${{ steps.invocation.outputs.mode }}
           CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          CLOUD_VERCEL_TOKEN: ${{ secrets.CLOUD_VERCEL_TOKEN }}
+          CLOUD_VERCEL_TOKEN: ${{ secrets.CLOUD_VERCEL_TOKEN || secrets.VERCEL_TOKEN || secrets.VERCEL_ACCESS_TOKEN }}
           CLOUD_DATABASE_TEMPLATE: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
           REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
@@ -93,13 +93,57 @@ jobs:
           # GITHUB_SHA and GITHUB_REPOSITORY are provided by the Actions runner.
         run: npm run recovery:cloud -- --mode "$RECOVERY_MODE"
 
+      - name: Classify credential mismatch without printing secrets
+        if: failure() && steps.invocation.outputs.mode == 'preflight'
+        env:
+          CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
+          CLOUD_DATABASE_TEMPLATE: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
+        run: |
+          node <<'NODE'
+          const { Client } = require('pg');
+          function mask(value) {
+            if (value) console.log(`::add-mask::${String(value).replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A')}`);
+          }
+          (async () => {
+            const template = process.env.CLOUD_DATABASE_TEMPLATE || '';
+            let parsed;
+            try { parsed = new URL(template); }
+            catch { console.log('template_url=invalid'); return; }
+            mask(decodeURIComponent(parsed.password || ''));
+            const client = new Client({ connectionString: template, connectionTimeoutMillis: 15000 });
+            try {
+              await client.connect();
+              await client.query('SELECT 1');
+              console.log('template_auth=ok');
+            } catch (error) {
+              console.log(`template_auth=${error && error.code ? error.code : 'error'}`);
+            } finally {
+              try { await client.end(); } catch {}
+            }
+            const key = process.env.CLOUD_NEON_API_KEY || '';
+            if (!key) { console.log('reveal=missing_key'); return; }
+            let response;
+            try {
+              response = await fetch('https://console.neon.tech/api/v2/projects/bitter-field-76784435/branches/br-shy-cake-akmhbjg9/roles/neondb_owner/reveal_password', {
+                headers: { Authorization: `Bearer ${key}`, Accept: 'application/json' },
+              });
+            } catch { console.log('reveal=request_failed'); return; }
+            if (!response.ok) { console.log(`reveal=http_${response.status}`); return; }
+            const body = await response.json().catch(() => null);
+            const password = body && (body.password || (body.role && body.role.password));
+            if (typeof password !== 'string') { console.log('reveal=unexpected'); return; }
+            mask(password);
+            console.log(`password_matches_template=${password === decodeURIComponent(parsed.password || '')}`);
+          })().catch(() => { console.log('classify_failed'); });
+          NODE
+
       - name: Continue with time-gated recovery after push preflight
         id: pushed_recover
         if: steps.invocation.outputs.continue == 'recover'
         env:
           RECOVERY_MODE: recover
           CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          CLOUD_VERCEL_TOKEN: ${{ secrets.CLOUD_VERCEL_TOKEN }}
+          CLOUD_VERCEL_TOKEN: ${{ secrets.CLOUD_VERCEL_TOKEN || secrets.VERCEL_TOKEN || secrets.VERCEL_ACCESS_TOKEN }}
           CLOUD_DATABASE_TEMPLATE: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
           REVALIDATION_SECRET: ${{ secrets.REVALIDATION_SECRET }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
