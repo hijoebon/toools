@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { getDatabaseUrl, normalizePgSslMode } from "./database-url";
+import { getDatabaseUrl, normalizePgSslMode, pgPoolConfig } from "./database-url";
 
 const neon = "ep-weathered-shape-aky91jmc-pooler.c-3.us-west-2.aws.neon.tech";
 
@@ -46,6 +46,23 @@ test("loopback URLs keep an explicit or absent sslmode", () => {
   ]) {
     assert.equal(normalizePgSslMode(raw), raw);
   }
+});
+
+test("Neon pool config forces TLS without leaving sslmode for pg to reinterpret", () => {
+  const raw = `postgresql://neondb_owner:p%40ss%2Fword@${neon}/neondb?sslmode=require&channel_binding=require`;
+  const config = pgPoolConfig(raw);
+  assert.equal(config.ssl?.rejectUnauthorized, true);
+  assert.equal(new URL(config.connectionString).searchParams.get("sslmode"), null);
+  assert.equal(new URL(config.connectionString).searchParams.get("channel_binding"), "require");
+  assert.equal(config.connectionString.includes("p%40ss%2Fword"), true);
+
+  const duplicate = pgPoolConfig(`postgresql://neondb_owner:secret@${neon}/neondb?sslmode=require&sslmode=disable`);
+  assert.equal(new URL(duplicate.connectionString).searchParams.get("sslmode"), null);
+  assert.equal(duplicate.ssl?.rejectUnauthorized, true);
+
+  const loopback = pgPoolConfig("postgresql://toools:toools@127.0.0.1:5432/toools?sslmode=disable");
+  assert.equal(loopback.ssl, undefined);
+  assert.equal(loopback.connectionString, "postgresql://toools:toools@127.0.0.1:5432/toools?sslmode=disable");
 });
 
 test("getDatabaseUrl reads DATABASE_URL and applies Neon TLS", () => {
