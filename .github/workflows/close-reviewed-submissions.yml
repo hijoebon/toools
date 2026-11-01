@@ -45,6 +45,7 @@ jobs:
       - name: Comment and close
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: korbinjoe/toools
         run: |
           gh issue comment 9 --body "$(sed 's/^[[:space:]]*//' <<'EOF'
           The production listing is published and verified:
