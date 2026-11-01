@@ -29,6 +29,13 @@ test("the editorial day is stable until midnight in Shanghai", () => {
   assert.equal(tomorrow, evening + 1);
 });
 
+test("unparseable added dates do not hide the rest of a healthy recent catalog", () => {
+  const valid = tool("valid");
+  const invalid = { slug: "bad", category: { slug: "ai" }, createdAt: "not-a-date" };
+  assert.deepEqual(selectRecentPool([invalid, valid]).map((item) => item.slug), ["valid"]);
+  assert.deepEqual(selectRecentPool([invalid, invalid]).map((item) => item.slug), ["bad"]);
+});
+
 test("recent candidates stay within 30 days of the newest approved entry", () => {
   const newest = tool("newest");
   const edge = tool("edge", "design", 30);

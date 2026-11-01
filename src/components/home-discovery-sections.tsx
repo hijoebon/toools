@@ -135,6 +135,7 @@ function SectionHeading({
 export function HomeDiscoverySections({
   hero,
   recentTools,
+  recentUnavailable = false,
   featuredTools,
   workflows,
   categories,
@@ -142,6 +143,7 @@ export function HomeDiscoverySections({
 }: {
   hero: ReactNode;
   recentTools: HomeDiscoveryTool[];
+  recentUnavailable?: boolean;
   featuredTools: HomeDiscoveryTool[];
   workflows: HomeWorkflow[];
   categories: HomeCategory[];
@@ -249,13 +251,15 @@ export function HomeDiscoverySections({
                           <h3 className="truncate text-sm font-semibold group-hover:text-primary">
                             {tool.name}
                           </h3>
-                          <time
-                            dateTime={tool.createdAt}
-                            title={`Added ${tool.createdAt.slice(0, 10)}`}
-                            className="shrink-0 text-[10px] text-muted-foreground"
-                          >
-                            {addedDate.format(new Date(tool.createdAt))}
-                          </time>
+                          {Number.isFinite(new Date(tool.createdAt).getTime()) && (
+                            <time
+                              dateTime={tool.createdAt}
+                              title={`Added ${tool.createdAt.slice(0, 10)}`}
+                              className="shrink-0 text-[10px] text-muted-foreground"
+                            >
+                              {addedDate.format(new Date(tool.createdAt))}
+                            </time>
+                          )}
                         </div>
                         <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
                           {tool.tagline}
@@ -275,7 +279,9 @@ export function HomeDiscoverySections({
                 ))}
                 {!recent.length && (
                   <p className="p-5 text-sm text-muted-foreground">
-                    Recent additions are unavailable right now.
+                    {recentUnavailable
+                      ? "Recent additions are unavailable right now."
+                      : "No recent additions yet."}
                   </p>
                 )}
               </div>

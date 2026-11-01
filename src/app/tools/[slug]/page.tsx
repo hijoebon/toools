@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadApprovedTool, toolCardSelect } from "@/lib/tools";
 import { after, connection } from "next/server";
 import { JsonLd } from "@/components/json-ld";
-import { breadcrumbData, pageMetadata, siteUrl } from "@/lib/seo";
+import { breadcrumbData, pageMetadata, softwareApplicationJsonLd, toolPageDescription } from "@/lib/seo";
 import { toolEditorial } from "@/lib/tool-editorial";
 import { recordToolMetric } from "@/lib/record-tool-metric";
 import { getToolExternalLinks } from "@/lib/tool-links";
@@ -55,7 +55,14 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
   const tool = loaded.tool;
   return pageMetadata(
     `${tool.name}: Use Cases & Alternatives`,
-    toolEditorial[slug]?.summary || tool.tagline,
+    toolPageDescription({
+      name: tool.name,
+      tagline: tool.tagline,
+      description: tool.description,
+      pricing: tool.pricing,
+      categoryName: tool.category.name,
+      editorialSummary: toolEditorial[slug]?.summary,
+    }),
     `/tools/${tool.slug}`,
     { image: tool.screenshotUrl || undefined },
   );
@@ -70,6 +77,7 @@ const pricingLabels: Record<string, string> = {
 
 const compactNumber = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
 const countNumber = new Intl.NumberFormat("en");
+const listingDate = new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 
 export default async function ToolPage({ params }: ToolPageProps) {
   await connection();
@@ -97,7 +105,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
   return (
     <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
       <JsonLd data={breadcrumbData([{ name: "Home", path: "/" }, { name: "Tools", path: "/tools" }, { name: tool.name, path: `/tools/${tool.slug}` }])} />
-      <JsonLd data={{ "@context": "https://schema.org", "@type": "SoftwareApplication", "@id": `${siteUrl(`/tools/${tool.slug}`)}#software`, name: tool.name, description: editorial?.summary || tool.description, url: tool.url, applicationCategory: tool.category.name, ...(tool.platforms.length ? { operatingSystem: tool.platforms.join(", ") } : {}), mainEntityOfPage: siteUrl(`/tools/${tool.slug}`), ...(tool.github ? { sameAs: [tool.github] } : {}) }} />
+      <JsonLd data={softwareApplicationJsonLd(tool, editorial?.summary)} />
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs text-muted-foreground pt-5 mb-5">
         <Link href="/tools" className="hover:text-foreground transition-colors">Tools</Link>
@@ -301,50 +309,58 @@ export default async function ToolPage({ params }: ToolPageProps) {
             <h3 className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground mb-3.5">
               At a Glance
             </h3>
-            <div className="flex flex-col">
+            <dl className="flex flex-col">
               <div className="flex justify-between items-center py-2 border-b border-muted text-[0.8125rem]" title="Visits to this tool's detail page on Toools">
-                <span className="text-muted-foreground">Views</span>
-                <span className="font-semibold font-mono tabular-nums">{countNumber.format(tool.viewCount)}</span>
+                <dt className="text-muted-foreground">Views</dt>
+                <dd className="m-0 font-semibold font-mono tabular-nums">{countNumber.format(tool.viewCount)}</dd>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-muted text-[0.8125rem]" title="Tracked outbound clicks from Toools">
-                <span className="text-muted-foreground">Clicks</span>
-                <span className="font-semibold font-mono tabular-nums">{countNumber.format(tool.clickCount)}</span>
+                <dt className="text-muted-foreground">Clicks</dt>
+                <dd className="m-0 font-semibold font-mono tabular-nums">{countNumber.format(tool.clickCount)}</dd>
               </div>
               {tool.phVotes != null && (
                 <div className="flex justify-between items-center py-2 border-b border-muted text-[0.8125rem]">
-                  <span className="text-muted-foreground">PH Votes</span>
-                  <span className="font-semibold font-mono text-primary">{compactNumber.format(tool.phVotes)}</span>
+                  <dt className="text-muted-foreground">PH Votes</dt>
+                  <dd className="m-0 font-semibold font-mono text-primary">{compactNumber.format(tool.phVotes)}</dd>
                 </div>
               )}
               {tool.githubStars != null && (
                 <div className="flex justify-between items-center py-2 border-b border-muted text-[0.8125rem]">
-                  <span className="text-muted-foreground">GitHub Stars</span>
-                  {githubLink ? (
-                    <ToolWebsiteLink slug={tool.slug} destination="github" className="inline-flex items-center gap-1 font-semibold font-mono hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
-                      <span className="sr-only">View {tool.name} on GitHub, </span>
-                      {compactNumber.format(tool.githubStars)}
-                      <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
-                    </ToolWebsiteLink>
-                  ) : <span className="font-semibold font-mono">{compactNumber.format(tool.githubStars)}</span>}
+                  <dt className="text-muted-foreground">GitHub Stars</dt>
+                  <dd className="m-0 font-semibold font-mono">
+                    {githubLink ? (
+                      <ToolWebsiteLink slug={tool.slug} destination="github" className="inline-flex items-center gap-1 hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                        <span className="sr-only">View {tool.name} on GitHub, </span>
+                        {compactNumber.format(tool.githubStars)}
+                        <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+                      </ToolWebsiteLink>
+                    ) : compactNumber.format(tool.githubStars)}
+                  </dd>
                 </div>
               )}
               {!tool.github && !tool.githubStars && (
                 <div className="flex justify-between items-center py-2 border-b border-muted text-[0.8125rem]">
-                  <span className="text-muted-foreground">GitHub</span>
-                  <span className="font-semibold text-muted-foreground">Closed source</span>
+                  <dt className="text-muted-foreground">GitHub</dt>
+                  <dd className="m-0 font-semibold text-muted-foreground">Closed source</dd>
                 </div>
               )}
               <div className="flex justify-between items-center py-2 border-b border-muted text-[0.8125rem]">
-                <span className="text-muted-foreground">Pricing</span>
-                <span className="font-semibold font-mono">{editorial?.licenseNote ? "Self-hosted / Cloud" : pricingLabels[tool.pricing]}</span>
+                <dt className="text-muted-foreground">Pricing</dt>
+                <dd className="m-0 font-semibold font-mono">{editorial?.licenseNote ? "Self-hosted / Cloud" : pricingLabels[tool.pricing]}</dd>
               </div>
               {tool.platforms.length > 0 && (
-                <div className="flex justify-between items-center py-2 text-[0.8125rem]">
-                  <span className="text-muted-foreground">Platforms</span>
-                  <span className="font-semibold font-mono">{tool.platforms.join(", ")}</span>
+                <div className="flex justify-between items-center py-2 border-b border-muted text-[0.8125rem]">
+                  <dt className="text-muted-foreground">Platforms</dt>
+                  <dd className="m-0 font-semibold font-mono">{tool.platforms.join(", ")}</dd>
                 </div>
               )}
-            </div>
+              <div className="flex justify-between items-center py-2 text-[0.8125rem]">
+                <dt className="text-muted-foreground">Updated</dt>
+                <dd className="m-0 font-semibold font-mono">
+                  <time dateTime={tool.updatedAt.toISOString()}>{listingDate.format(tool.updatedAt)}</time>
+                </dd>
+              </div>
+            </dl>
           </div>
         </aside>
       </div>
