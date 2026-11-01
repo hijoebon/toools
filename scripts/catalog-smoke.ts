@@ -32,6 +32,52 @@ async function connect(url: string): Promise<Client> {
   return client;
 }
 
+async function neonRequest(apiKey: string, path: string, init: RequestInit = {}): Promise<{ ok: boolean; status: number; body: unknown }> {
+  const response = await fetch(`https://console.neon.tech/api/v2${path}`, {
+    ...init,
+    headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json", "Content-Type": "application/json" },
+    signal: AbortSignal.timeout(20_000),
+  });
+  return { ok: response.ok, status: response.status, body: await response.json().catch(() => null) };
+}
+
+function endpointDisabled(body: unknown): boolean | null {
+  if (!body || typeof body !== "object" || !("endpoint" in body)) return null;
+  const endpoint = (body as { endpoint?: { disabled?: unknown } }).endpoint;
+  return typeof endpoint?.disabled === "boolean" ? endpoint.disabled : null;
+}
+
+/** Re-enable only a disabled endpoint. Does not rotate passwords or change Vercel. */
+async function ensureEndpointEnabled(apiKey: string): Promise<boolean> {
+  const target = CLOUD_RECOVERY_TARGET;
+  const path = `/projects/${target.projectId}/endpoints/${target.endpointId}`;
+  const current = await neonRequest(apiKey, path);
+  if (!current.ok) {
+    console.log(`endpoint_read=http_${current.status}`);
+    return false;
+  }
+  const disabled = endpointDisabled(current.body);
+  console.log(`endpoint_disabled=${disabled === null ? "unknown" : disabled}`);
+  if (disabled !== true) return true;
+  if (process.env.CATALOG_SMOKE_ENABLE_ENDPOINT !== "true") return false;
+  const enabled = await neonRequest(apiKey, path, { method: "PATCH", body: JSON.stringify({ endpoint: { disabled: false } }) });
+  if (!enabled.ok) {
+    console.log(`endpoint_enable=http_${enabled.status}`);
+    return false;
+  }
+  const deadline = Date.now() + 30_000;
+  while (Date.now() < deadline) {
+    const again = await neonRequest(apiKey, path);
+    if (again.ok && endpointDisabled(again.body) === false) {
+      console.log("endpoint_disabled=false");
+      return true;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2_000));
+  }
+  console.log("endpoint_enable=pending");
+  return false;
+}
+
 async function revealedPassword(apiKey: string): Promise<string | null> {
   const target = CLOUD_RECOVERY_TARGET;
   const response = await fetch(
@@ -68,6 +114,11 @@ async function main() {
     return;
   }
   mask(decodeURIComponent(parsed.password));
+  const apiKey = process.env.CLOUD_NEON_API_KEY || "";
+  if (apiKey && !(await ensureEndpointEnabled(apiKey))) {
+    process.exitCode = 1;
+    return;
+  }
   const config = pgPoolConfig(databaseUrl);
   console.log(`pool_ssl=${config.ssl ? "true" : "false"}`);
 

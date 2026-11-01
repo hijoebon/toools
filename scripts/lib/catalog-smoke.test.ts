@@ -15,7 +15,7 @@ test("connection failures stay as safe kinds", () => {
 
 test("failure hints stay inside a fixed word list", () => {
   assert.equal(connectionFailureHints("connection is insecure (try using `sslmode=require`)"), "insecure,sslmode,ssl");
-  assert.equal(connectionFailureHints("no pg_hba.conf entry, no encryption"), "encryption");
+  assert.equal(connectionFailureHints("no pg_hba.conf entry, no encryption"), "encryption,pg_hba");
   assert.equal(connectionFailureHints("unrecognized"), "none");
 });
 
