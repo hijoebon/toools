@@ -1,5 +1,7 @@
 # Cloud recovery on November 1, 2026
 
+**Completion status:** the submission was published and closed by separate cloud workflows on November 1. This workflow remained blocked by its missing Vercel token; the authorized local fallback subsequently completed credential rotation, migration and queue activation. The one-time recovery workflow is now disabled and the local heartbeat is paused. Catalog smoke is read-only and cannot enable an isolated endpoint. See the [verified completion record](neon-recovery-2026-11-01.md); the setup below is historical, not a pending request for another password reset.
+
 The `Neon recovery and publication` GitHub Actions workflow runs the recovery on GitHub's standard `ubuntu-latest` runner. It does not require the owner's Mac, a local terminal, or Codex to remain running. The repository is public, so standard hosted runner time is free. The workflow uses no larger runners, Actions cache, uploaded artifacts, new hosted services, or paid-plan upgrades. Existing Neon and Vercel free-plan limits still apply.
 
 ## Schedule and scope

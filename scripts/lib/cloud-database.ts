@@ -7,6 +7,7 @@ import { Client } from "pg";
 import type { Prisma } from "@prisma/client";
 import { applyToolMetricBatch, type MetricDatabase } from "../../src/lib/tool-metric-batches";
 import type { ToolMetricEvent } from "../../src/lib/metric-event";
+import { pgPoolConfig } from "../../src/lib/database-url";
 import { CLOUD_RECOVERY_NOT_BEFORE, CLOUD_RECOVERY_TARGET } from "./cloud-recovery";
 import { verifyIssue9Database } from "./cloud-publication";
 
@@ -85,7 +86,7 @@ function ownedBranch(value: unknown, name: string): Json {
 }
 
 async function connectPostgres(databaseUrl: string): Promise<RecoveryDatabaseConnection> {
-  const client = new Client({ connectionString: databaseUrl, connectionTimeoutMillis: 20_000, statement_timeout: 120_000 });
+  const client = new Client({ ...pgPoolConfig(databaseUrl), connectionTimeoutMillis: 20_000, statement_timeout: 120_000 });
   try { await client.connect(); } catch { await client.end().catch(() => {}); throw new CloudDatabaseError("database_connection_failed"); }
   return {
     query: async (sql, values = []) => {

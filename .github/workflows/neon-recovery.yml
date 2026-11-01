@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Preflight checks credentials without changing production. Recover is time-gated and runs only after the catalog smoke.'
+        description: 'Preflight checks credentials without changing production. Recover is time-gated and rotates credentials before enabling the endpoint.'
         required: true
         default: preflight
         type: choice
@@ -68,14 +68,6 @@ jobs:
       - name: Install locked dependencies
         if: steps.invocation.outputs.run == 'true'
         run: npm ci --no-audit --no-fund
-
-      - name: Prove catalog reads before any production rewrite
-        if: steps.invocation.outputs.run == 'true'
-        env:
-          DATABASE_URL: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
-          CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          CATALOG_SMOKE_ENABLE_ENDPOINT: 'true'
-        run: npm exec tsx scripts/catalog-smoke.ts
 
       - name: Run cloud recovery entrypoint
         if: steps.invocation.outputs.run == 'true'
