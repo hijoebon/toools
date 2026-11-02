@@ -353,10 +353,14 @@
     "sources": [
       "https://github.com/gitroomhq/postiz-app",
       "https://github.com/gitroomhq/postiz-app/blob/main/README.md",
-      "https://github.com/gitroomhq/postiz-app/blob/main/LICENSE"
+      "https://github.com/gitroomhq/postiz-app/blob/main/LICENSE",
+      "https://www.producthunt.com/products/postiz"
     ],
     "platforms": [
       "Web"
+    ],
+    "legacyUrls": [
+      "https://www.producthunt.com/r/DTE56DREXBP3M6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+github-trending-plus+%28ID%3A+285454%29"
     ]
   },
   {

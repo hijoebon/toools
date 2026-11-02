@@ -29,6 +29,8 @@ The machine-readable [tool list](../scripts/config/seo-marketing-tools.json) rec
 
 `OPEN_SOURCE` describes the listed source edition and is not a promise that hosting, data APIs, email delivery, model inference, or commercial editions are free. Star counts are not hardcoded in the editorial file because the GitHub metadata connector did not return an exact current count; the normal importer can refresh them from live repository metadata.
 
+The existing pending Postiz listing retained a Product Hunt redirect rather than its website. Its launch title and product identity were checked against the [official Product Hunt page](https://www.producthunt.com/products/postiz), which links both `postiz.com` and the official GitHub project. The reviewed record explicitly lists that old URL in `legacyUrls`; curation matches the complete stored URL and claims its normalized identity alias. It upgrades that pending record to the reviewed website while preserving its ID, slug, counters, and existing primary source. Names and slugs alone never authorize a merge. Approved or rejected listings keep their existing website, and ambiguous identity matches still roll back the whole transaction.
+
 ## Marketing growth workflow
 
 The existing `/stacks/marketing-seo-growth` URL becomes **Marketing, SEO & GEO Growth**. Its five stages are Keyword Research, Content Creation, Distribution, **GEO & AI Visibility**, and Measurement. The new GEO stage covers:

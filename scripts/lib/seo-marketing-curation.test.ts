@@ -45,6 +45,115 @@ async function reviewedList(): Promise<SeoMarketingTool[]> {
   return JSON.parse(await readFile("scripts/config/seo-marketing-tools.json", "utf8"));
 }
 
+const postizLegacyUrl = "https://www.producthunt.com/r/DTE56DREXBP3M6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+github-trending-plus+%28ID%3A+285454%29";
+
+async function pendingPostiz(postgres: PGlite, status = "PENDING", url = postizLegacyUrl) {
+  await postgres.query(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,source,"sourceUrl","viewCount","clickCount","updatedAt")
+    VALUES ('ph-postiz','Postiz','postiz','Product Hunt launch tagline','Product Hunt launch description',$1,'automation',$2::"ToolStatus",'PRODUCT_HUNT','https://www.producthunt.com/products/postiz',31,9,now())`, [url, status]);
+}
+
+test("an explicitly reviewed Product Hunt alias reuses pending Postiz and migrates only its website URL", async () => {
+  const postgres = await database();
+  try {
+    await pendingPostiz(postgres);
+    const postiz = (await reviewedList()).find((candidate) => candidate.slug === "postiz")!;
+    assert.deepEqual(postiz.legacyUrls, [postizLegacyUrl]);
+    assert.ok(postiz.sources.includes("https://www.producthunt.com/products/postiz"));
+    const sql = buildSeoMarketingCurationSql([postiz]);
+    await postgres.exec(sql);
+    const row = (await postgres.query(`SELECT id,slug,tagline,description,url,status::text,source::text,"sourceUrl","viewCount","clickCount","updatedAt" FROM "Tool"`)).rows[0];
+    assert.deepEqual({ ...row, updatedAt: undefined }, {
+      id: "ph-postiz", slug: "postiz", tagline: "Product Hunt launch tagline", description: "Product Hunt launch description",
+      url: new URL(postiz.url).href, status: "APPROVED", source: "PRODUCT_HUNT", sourceUrl: "https://www.producthunt.com/products/postiz",
+      viewCount: 31, clickCount: 9, updatedAt: undefined,
+    });
+    const aliases = (await postgres.query<{ key: string }>(`SELECT key FROM "ToolIdentity" WHERE "toolId"='ph-postiz'`)).rows.map((alias) => alias.key);
+    assert.ok(aliases.includes("url:producthunt.com/r/DTE56DREXBP3M6"));
+    assert.ok(aliases.every((key) => !key.includes("utm_")));
+    const discovery = (await postgres.query<{ metadata: { legacyUrls: string[]; sources: string[] } }>(`SELECT metadata FROM "ToolDiscovery" WHERE "toolId"='ph-postiz'`)).rows[0];
+    assert.deepEqual(discovery.metadata.legacyUrls, [postizLegacyUrl]);
+    assert.ok(discovery.metadata.sources.includes("https://www.producthunt.com/products/postiz"));
+    await postgres.exec(sql);
+    assert.equal((await postgres.query(`SELECT * FROM "Tool"`)).rows.length, 1);
+    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 1);
+    assert.deepEqual((await postgres.query(`SELECT "updatedAt" FROM "Tool" WHERE id='ph-postiz'`)).rows[0].updatedAt, row.updatedAt);
+  } finally { await postgres.close(); }
+});
+
+test("reviewed legacy aliases preserve approved and rejected URLs, counters, and primary provenance", async () => {
+  for (const status of ["APPROVED", "REJECTED"]) {
+    const postgres = await database();
+    try {
+      await pendingPostiz(postgres, status);
+      const postiz = (await reviewedList()).find((candidate) => candidate.slug === "postiz")!;
+      await postgres.exec(buildSeoMarketingCurationSql([postiz]));
+      assert.deepEqual((await postgres.query(`SELECT id,slug,url,status::text,source::text,"sourceUrl","viewCount","clickCount" FROM "Tool"`)).rows, [{
+        id: "ph-postiz", slug: "postiz", url: postizLegacyUrl, status, source: "PRODUCT_HUNT",
+        sourceUrl: "https://www.producthunt.com/products/postiz", viewCount: 31, clickCount: 9,
+      }]);
+      if (status === "REJECTED") {
+        assert.equal((await postgres.query(`SELECT * FROM "ToolIdentity"`)).rows.length, 0);
+        assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+      }
+    } finally { await postgres.close(); }
+  }
+});
+
+test("a matching Postiz slug without its explicitly reviewed URL alias still rolls back", async () => {
+  const postgres = await database();
+  try {
+    await pendingPostiz(postgres);
+    const postiz = (await reviewedList()).find((candidate) => candidate.slug === "postiz")!;
+    await assert.rejects(postgres.exec(buildSeoMarketingCurationSql([{ ...postiz, legacyUrls: undefined }])), /Slug conflict/);
+    await postgres.exec("ROLLBACK;");
+    assert.equal((await postgres.query(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
+    assert.equal((await postgres.query(`SELECT url FROM "Tool" WHERE id='ph-postiz'`)).rows[0].url, postizLegacyUrl);
+    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+  } finally { await postgres.close(); }
+});
+
+test("legacy URLs match exact reviewed spellings rather than unreviewed tracking variants", async () => {
+  const postgres = await database();
+  try {
+    const unreviewedUrl = postizLegacyUrl.replace("utm_campaign=producthunt-api", "utm_campaign=unreviewed");
+    await pendingPostiz(postgres, "PENDING", unreviewedUrl);
+    const postiz = (await reviewedList()).find((candidate) => candidate.slug === "postiz")!;
+    await assert.rejects(postgres.exec(buildSeoMarketingCurationSql([postiz])), /Slug conflict/);
+    await postgres.exec("ROLLBACK;");
+    assert.equal((await postgres.query(`SELECT url FROM "Tool" WHERE id='ph-postiz'`)).rows[0].url, unreviewedUrl);
+  } finally { await postgres.close(); }
+});
+
+test("an alias matching another existing listing rolls back the complete reviewed publication", async () => {
+  const postgres = await database();
+  try {
+    await pendingPostiz(postgres);
+    const tools = await reviewedList();
+    const postiz = tools.find((candidate) => candidate.slug === "postiz")!;
+    await postgres.query(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"updatedAt")
+      VALUES ('official-postiz','Other Postiz','another-postiz','Other','Other',$1,'automation','APPROVED',now())`, [postiz.url]);
+    await assert.rejects(postgres.exec(buildSeoMarketingCurationSql(tools)), /Identity conflict.*multiple existing listings/);
+    await postgres.exec("ROLLBACK;");
+    assert.equal((await postgres.query(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
+    assert.equal((await postgres.query(`SELECT * FROM "Tool"`)).rows.length, 2);
+    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+  } finally { await postgres.close(); }
+});
+
+test("generation rejects invalid legacy URLs and cross-candidate normalized alias collisions", () => {
+  for (const legacyUrls of ["https://public.example.com", [null], [""], ["javascript:alert(1)"], ["http://127.0.0.1/"], ["https://user:password@public.example.com/"]]) {
+    assert.throws(() => buildSeoMarketingCurationSql([{ ...tool, legacyUrls }]), /legacy URL/);
+  }
+  const other = { ...tool, slug: "another-seo", url: "https://another.example.com", github: "https://github.com/Other/SEO", repositoryId: "654321" };
+  assert.throws(() => buildSeoMarketingCurationSql([
+    { ...tool, legacyUrls: ["https://launch.example.com/product?utm_source=one"] },
+    { ...other, legacyUrls: ["https://launch.example.com/product?utm_source=two"] },
+  ]), /Duplicate reviewed identity/);
+  assert.throws(() => buildSeoMarketingCurationSql([
+    { ...tool, legacyUrls: [other.url] }, other,
+  ]), /Duplicate reviewed identity/);
+});
+
 test("growth publication preserves original stages and resolves GEO recommendations to reused catalog identities", async () => {
   const postgres = await database();
   try {

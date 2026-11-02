@@ -19,6 +19,7 @@ export interface SeoMarketingTool {
   licenseSpdxId: string;
   reviewedAt: string;
   sources: string[];
+  legacyUrls?: string[];
 }
 
 function literal(value: string) {
@@ -51,13 +52,23 @@ function reviewedTools(input: unknown) {
     }
     if (value.sources.some((source) => !publicHttpUrl(source))) throw new Error(`Invalid review source: ${value.slug}`);
     if (value.platforms !== undefined && (!Array.isArray(value.platforms) || value.platforms.some((platform) => typeof platform !== "string" || !platform.trim()))) throw new Error(`Invalid platforms: ${value.slug}`);
-    const keys = identityKeys({ url, github, repositoryId: value.repositoryId });
+    if (value.legacyUrls !== undefined && (!Array.isArray(value.legacyUrls)
+      || value.legacyUrls.some((legacyUrl) => typeof legacyUrl !== "string" || !legacyUrl.trim() || !publicHttpUrl(legacyUrl)))) {
+      throw new Error(`Invalid reviewed legacy URL: ${value.slug}`);
+    }
+    // Exact reviewed spellings locate older records before identity aliases
+    // existed. Normalized aliases retain that provenance after URL migration.
+    const legacyUrls = [...new Set(value.legacyUrls ?? [])];
+    const keys = [...new Set([
+      ...identityKeys({ url, github, repositoryId: value.repositoryId }),
+      ...legacyUrls.flatMap((legacyUrl) => identityKeys({ url: legacyUrl })),
+    ])];
     if (keys.some((key) => identities.has(key))) throw new Error(`Duplicate reviewed identity: ${value.slug}`);
     slugs.add(value.slug);
     keys.forEach((key) => identities.add(key));
     const tagRecords = [...new Set(value.tags)].map((name) => ({ name, slug: tagSlug(name) }));
     if (tagRecords.some((tag) => !tag.slug)) throw new Error(`Invalid tag: ${value.slug}`);
-    return { ...value, github, url, identityKeys: keys, normalizedUrl: normalizedToolUrl(url), repoKey: github.replace("https://", ""), iconUrl: getGoogleFaviconUrl(url), tagRecords };
+    return { ...value, github, url, legacyUrls, identityKeys: keys, normalizedUrl: normalizedToolUrl(url), repoKey: github.replace("https://", ""), iconUrl: getGoogleFaviconUrl(url), tagRecords };
   });
 }
 
@@ -147,6 +158,7 @@ export function buildSeoMarketingCurationSql(input: unknown): string {
   tool_row "Tool"%ROWTYPE;
   matching_ids text[];
   incoming_keys text[];
+  legacy_urls text[];
   tool_id text;
   category_id text;
   tag jsonb;
@@ -167,8 +179,10 @@ BEGIN
 
   FOR candidate IN SELECT value FROM jsonb_array_elements(${literal(JSON.stringify(tools))}::jsonb) LOOP
     incoming_keys := ARRAY(SELECT jsonb_array_elements_text(candidate->'identityKeys'));
+    legacy_urls := ARRAY(SELECT jsonb_array_elements_text(candidate->'legacyUrls'));
     SELECT array_agg(DISTINCT t.id) INTO matching_ids FROM "Tool" t
     WHERE t.id IN (SELECT "toolId" FROM "ToolIdentity" WHERE key = ANY(incoming_keys))
+      OR t.url = ANY(legacy_urls)
       OR ${normalizedRepoSql('t.github')} = candidate->>'repoKey'
       OR ${normalizedRepoSql('t.url')} = candidate->>'repoKey'
       OR (${normalizedWebsiteSql('t.url')}) = candidate->>'normalizedUrl';
@@ -199,6 +213,7 @@ BEGIN
           WITH ORDINALITY AS items(item, position) GROUP BY item
       ) merged;
       UPDATE "Tool" SET "categoryId" = category_id,
+        url = CASE WHEN status = 'PENDING' AND url = ANY(legacy_urls) THEN candidate->>'url' ELSE url END,
         github = coalesce(github, candidate->>'github'), status = 'APPROVED',
         pricing = CASE WHEN status = 'PENDING' THEN (candidate->>'pricing')::"Pricing" ELSE pricing END,
         "isOpenSource" = CASE WHEN status = 'PENDING' THEN (candidate->>'isOpenSource')::boolean ELSE "isOpenSource" END,
@@ -240,7 +255,7 @@ BEGIN
         'seo-geo-marketing:' || (candidate->>'repoKey'), candidate->>'github',
         jsonb_build_object('reviewedAt', candidate->>'reviewedAt', 'reviewBasis', 'official public documentation',
           'sources', candidate->'sources', 'repositoryId', candidate->>'repositoryId',
-          'licenseSpdxId', candidate->>'licenseSpdxId', 'category', 'seo-marketing'))
+          'licenseSpdxId', candidate->>'licenseSpdxId', 'legacyUrls', candidate->'legacyUrls', 'category', 'seo-marketing'))
       ON CONFLICT ("toolId", source, method, "sourceKey") DO UPDATE SET
         "sourceUrl" = EXCLUDED."sourceUrl", metadata = EXCLUDED.metadata, "lastSeenAt" = now();
   END LOOP;
