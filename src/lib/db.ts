@@ -1,15 +1,21 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaNeonHttp } from "@prisma/adapter-neon";
 import { Pool } from "pg";
 import { connection } from "next/server";
 import { getDatabaseUrl, pgPoolConfig } from "@/lib/database-url";
 import { catalogCache } from "@/lib/catalog-cache";
+import { neonHttpQueryOptions, resolveDatabaseTransport } from "@/lib/database-transport";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 function createPrismaClient() {
+  const url = getDatabaseUrl();
+  if (resolveDatabaseTransport(url, process.env.DATABASE_TRANSPORT) === "neon-http") {
+    return new PrismaClient({ adapter: new PrismaNeonHttp(url, neonHttpQueryOptions()) });
+  }
   const pool = new Pool({
-    ...pgPoolConfig(getDatabaseUrl()),
+    ...pgPoolConfig(url),
     connectionTimeoutMillis: 15_000,
     idleTimeoutMillis: 30_000,
     max: 5,

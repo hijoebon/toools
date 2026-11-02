@@ -11,6 +11,46 @@
   ],
   "topics": [
     {
+      "topic": "seo",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "technical-seo",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "seo-audit",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "generative-engine-optimization",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "answer-engine-optimization",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "ai-visibility",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "marketing-automation",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "email-marketing",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "social-media-management",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "topic": "social-media-scheduling-tool",
+      "categoryHint": "seo-marketing"
+    },
+    {
       "topic": "productivity",
       "categoryHint": "productivity"
     },
@@ -35,6 +75,30 @@
     }
   ],
   "keywords": [
+    {
+      "query": "\"generative engine optimization\" in:name,description",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "query": "\"AI visibility\" in:name,description",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "query": "\"rank tracking\" in:name,description",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "query": "\"SEO audit\" in:name,description",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "query": "\"social media scheduling\" in:name,description",
+      "categoryHint": "seo-marketing"
+    },
+    {
+      "query": "\"newsletter\" in:name,description",
+      "categoryHint": "seo-marketing"
+    },
     {
       "query": "\"note taking\" in:name,description,readme",
       "categoryHint": "writing-notes"

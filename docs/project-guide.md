@@ -117,9 +117,21 @@ NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `DATABASE_TRANSPORT` | No | `pg` (default), or `neon-http` to use Neon over HTTPS when a local network blocks PostgreSQL connections |
+| `TOOL_METRICS_MODE` | No | Use `disabled` for a local preview that reads a shared catalog without recording views/clicks; deployed `direct` and `queue` modes remain supported |
 | `NEXT_PUBLIC_BASE_URL` | No | Public site URL (defaults to `https://toools.top`) |
 
 Import and backfill scripts accept additional optional variables — see [Data import scripts](#data-import-scripts) below.
+
+Local development reads the real `DATABASE_URL` from the ignored project `.env`; the server does not need the deployment's full environment. Keep this connection current after password rotation. If the configured database is already populated, skip migration and seed commands below when you only want to preview existing content.
+
+For a local preview of an existing Neon catalog over HTTPS:
+
+```bash
+DATABASE_TRANSPORT=neon-http TOOL_METRICS_MODE=disabled npm run dev
+```
+
+The HTTP transport is opt-in and accepts only Neon-hosted PostgreSQL URLs. It uses a fresh 15-second timeout for each request, and supports catalog reads rather than interactive Prisma transactions. The metrics setting disables recording before creating an event or accessing the database or queue. It is not a general read-only database permission: do not run import, publication, or seed scripts when you only intend to browse. Restart the dev server after updating credentials or transport settings so its database client uses the new configuration. Successful local preview startup alone is not evidence that the database connection has succeeded; verify that catalog content appears without a saved-workflow fallback notice.
 
 ### 3. Set up the database
 

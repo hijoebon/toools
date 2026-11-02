@@ -1,0 +1,31 @@
+{
+  "unreleased": {
+    "title": "Next update",
+    "summary": "Changes being prepared for a future release.",
+    "added": [],
+    "changed": [],
+    "fixed": []
+  },
+  "releases": [
+    {
+      "version": "0.2.0",
+      "date": "2026-11-02",
+      "title": "SEO, GEO & Marketing workflows",
+      "summary": "Discover search and marketing tools, build a workflow for AI search visibility, and follow versioned product updates.",
+      "added": [
+        "Twelve reviewed GitHub tools for SEO audits, AI search visibility, email marketing, and social publishing.",
+        "A GEO & AI Visibility stage in the marketing growth workflow, with SiteOne Crawler, OneGlanse, and OpenSEO for AI search readiness, saved answers, brand mentions, and citations.",
+        "A public changelog with dated product updates and a separate view of work that is not yet released.",
+        "A version link in the footer so you can find the update notes for the Toools build you are using."
+      ],
+      "changed": [
+        "Expand SEO & Marketing to SEO & GEO & Marketing, covering generative engine optimization and AI search visibility.",
+        "Expand Marketing & SEO Growth to Marketing, SEO & GEO Growth while preserving its existing URL.",
+        "Product updates now use consistent major, minor, and patch versions."
+      ],
+      "fixed": [
+        "Keep workflow tool cards clickable when live catalog details are unavailable, using official website links and clear availability labels."
+      ]
+    }
+  ]
+}

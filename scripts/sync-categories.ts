@@ -14,7 +14,7 @@ const CATEGORIES = [
   { name: "Writing & Notes", slug: "writing-notes", icon: "pen-line", sortOrder: 4 },
   { name: "Image & Media", slug: "image-media", icon: "image", sortOrder: 5 },
   { name: "Video & Audio", slug: "video-audio", icon: "film", sortOrder: 6 },
-  { name: "SEO & Marketing", slug: "seo-marketing", icon: "trending-up", sortOrder: 7 },
+  { name: "SEO & GEO & Marketing", slug: "seo-marketing", description: "SEO analysis, generative engine optimization (GEO), AI search visibility, and marketing tools", icon: "trending-up", sortOrder: 7 },
   { name: "Data & Analytics", slug: "data-analytics", icon: "bar-chart-3", sortOrder: 8 },
   { name: "Productivity", slug: "productivity", icon: "zap", sortOrder: 9 },
   { name: "Automation", slug: "automation", icon: "workflow", sortOrder: 10 },
@@ -34,8 +34,8 @@ async function main() {
   for (const cat of CATEGORIES) {
     await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: { name: cat.name, icon: cat.icon, sortOrder: cat.sortOrder },
-      create: { name: cat.name, slug: cat.slug, icon: cat.icon, sortOrder: cat.sortOrder },
+      update: { name: cat.name, description: cat.description, icon: cat.icon, sortOrder: cat.sortOrder },
+      create: { name: cat.name, slug: cat.slug, description: cat.description, icon: cat.icon, sortOrder: cat.sortOrder },
     });
     publication.markChanged();
   }

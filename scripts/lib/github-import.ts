@@ -6,6 +6,7 @@ import { repositorySkipReason, verifiedOpenSource, type GithubSources } from './
 import { canonicalRepoUrl, publicHttpUrl } from './import-identity';
 import { type ImportStore, type ImportCandidate, type ImportResult } from './import-store';
 import { parseGithubRepoUrl } from './github';
+import { hasSeoMarketingIntent } from './category-matcher';
 
 export type ImportMode = 'all' | 'topics' | 'keywords' | 'organizations' | 'directories';
 export type RunOptions = { mode: ImportMode; limit: number; newLimit?: number; maxPerSource: number; dryRun: boolean };
@@ -26,11 +27,14 @@ export function repositoryCandidate(repo: GithubRepository, discovery: ImportCan
   const isOpenSource = verifiedOpenSource(repo.license?.spdx_id);
   const github = canonicalRepoUrl(repo.html_url);
   if (!github) throw new Error('Invalid GitHub repository URL');
+  // Repositories may omit purpose topics. Use explicit SEO/GEO/marketing
+  // descriptions as a fallback while keeping a curated source hint authoritative.
+  const descriptionHints = !categoryHint && repo.description && hasSeoMarketingIntent([repo.description]) ? [repo.description] : [];
   return {
     name: repo.name,
     url: repo.homepage && publicHttpUrl(repo.homepage) || github,
     description: repo.description || repo.name,
-    categoryHints: [...(categoryHint ? [categoryHint] : []), ...(repo.topics || [])],
+    categoryHints: [...(categoryHint ? [categoryHint] : []), ...(repo.topics || []), ...descriptionHints],
     categorySlug: categoryHint,
     github, repositoryId: String(repo.id), githubStars: repo.stargazers_count,
     isOpenSource, pricing: isOpenSource ? 'OPEN_SOURCE' : 'FREEMIUM',

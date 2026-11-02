@@ -11,6 +11,8 @@ import type { PrismaClient } from "@prisma/client";
 import { catalogOr } from "./catalog-fallback";
 import { siteUrl } from "./seo";
 import { stackPreviews } from "./stacks-data";
+import { getStackToolDestination } from "./stack-tool-links";
+import { marketingGrowthStack, marketingGeoStage } from "./marketing-growth-stack";
 
 test("catalog reads fall back on failure and still surface real not-found errors", async () => {
   assert.deepEqual(await catalogOr(async () => 2, 0), { value: 2, degraded: false });
@@ -82,6 +84,12 @@ test("catalog routes degrade when the database is unreachable and recover withou
         if (!databaseAvailable) throw new Error("database unavailable");
         return stacks;
       },
+      findUnique: async ({ where }: { where: { slug: string } }) => {
+        if (!databaseAvailable) throw new Error("database unavailable");
+        return where.slug === "from-db" ? {
+          slug: "from-db", name: "Live workflow", description: "From the catalog", stages: [],
+        } : null;
+      },
     },
   } as unknown as PrismaClient;
 
@@ -106,6 +114,7 @@ test("catalog routes degrade when the database is unreachable and recover withou
     const { loadToolsPageData, resolveToolsListingMeta } = await import("../app/tools/page");
     const { loadCategoryPageData } = await import("../app/categories/[slug]/page");
     const { loadApprovedTool, loadCatalogCategories, loadCatalogCategory, loadFeaturedTools } = await import("./tools");
+    const { getStackBySlug } = await import("./stacks");
 
     const degradedSitemap = await loadSitemap();
     const degradedUrls = degradedSitemap.map((entry) => entry.url);
@@ -123,6 +132,34 @@ test("catalog routes degrade when the database is unreachable and recover withou
     assert.deepEqual(await loadFeaturedTools(), []);
     assert.equal((await loadCategoryPageData("development")).status, "unavailable");
 
+    // Static workflows remain usable during an outage without guessing catalog
+    // slugs, prices, or engagement numbers that the database did not return.
+    for (const preview of stackPreviews) {
+      const fallback = await getStackBySlug(preview.slug);
+      assert.ok(fallback, preview.slug);
+      assert.equal(fallback.isFallback, true);
+      for (const tool of fallback.stages.flatMap((stage) => stage.tools)) {
+        const destination = getStackToolDestination(tool);
+        assert.ok(destination?.external, `${preview.slug}: ${tool.name}`);
+        assert.match(destination.href, /^https:\/\//);
+        assert.equal(tool.slug, null);
+        assert.equal(tool.pricing, null);
+        assert.equal(tool.viewCount, null);
+        assert.equal(tool.clickCount, null);
+      }
+    }
+    const marketingFallback = await getStackBySlug(marketingGrowthStack.slug);
+    assert.ok(marketingFallback);
+    assert.equal(marketingFallback.name, marketingGrowthStack.name);
+    assert.equal(marketingFallback.stages.length, 5);
+    const geoStage = marketingFallback.stages[3];
+    assert.equal(geoStage.name, marketingGeoStage.name);
+    assert.equal(geoStage.description, marketingGeoStage.description);
+    assert.equal(geoStage.editorNote, marketingGeoStage.editorNote);
+    assert.deepEqual(geoStage.tools.map((tool) => tool.name), marketingGeoStage.tools.map((tool) => tool.name));
+    assert.equal(marketingFallback.stages[4].name, "Measurement");
+    assert.equal(await getStackBySlug("not-a-curated-stack"), null);
+
     const degradedTools = await loadToolsPageData({ page: "3" });
     assert.equal(degradedTools.degraded, true);
     assert.equal(degradedTools.outOfRange, false);
@@ -134,6 +171,12 @@ test("catalog routes degrade when the database is unreachable and recover withou
     if (!degradedMeta.notFound) assert.equal(degradedMeta.index, false);
 
     databaseAvailable = true;
+
+    const liveStack = await getStackBySlug("from-db");
+    assert.ok(liveStack);
+    assert.equal(liveStack.isFallback, false);
+    assert.equal(liveStack.name, "Live workflow");
+    assert.equal(await getStackBySlug("not-a-curated-stack"), null);
 
     assert.equal((await loadCatalogCategories()).length, 1);
     assert.equal((await loadCatalogCategory("development")).status, "ready");

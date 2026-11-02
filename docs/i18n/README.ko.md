@@ -104,6 +104,8 @@ npx tsx scripts/import-producthunt.ts
 
 ## 문서
 
+- [제품 버전 관리 및 릴리스 절차](../../docs/versioning.md)
+- [변경 기록](../../CHANGELOG.md)
 - [프로젝트 가이드: 선정, 가져오기, 구조, 배포 및 분석](../../docs/project-guide.md)
 - [SEO 및 AI 검색 노출: 구현과 검증](../../docs/seo-geo-implementation.md)
 - [로컬 개발 성능 분석](../../docs/local-dev-performance-analysis-2026-10-13.md)

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "./seo";
+import { currentRelease } from "./releases";
 
 export type SitemapTool = { slug: string; updatedAt?: string | null; categorySlug?: string | null };
 export type SitemapCategory = { slug: string };
@@ -7,11 +8,12 @@ export type SitemapStack = { slug: string; updatedAt?: string | null };
 
 // Pages whose visible copy records a content date. Do not stamp pages that have none.
 const STATIC_CONTENT_DATES: Record<string, string> = {
+  "/changelog": currentRelease.date,
   "/editorial-policy": "2026-10-13",
   "/compare/n8n-vs-make-vs-zapier": "2026-10-13",
 };
 
-const STATIC_PATHS = ["/", "/stacks", "/tools", "/categories", "/submit", "/about", "/editorial-policy", "/how-we-curate", "/compare/n8n-vs-make-vs-zapier"];
+const STATIC_PATHS = ["/", "/stacks", "/tools", "/categories", "/submit", "/about", "/changelog", "/editorial-policy", "/how-we-curate", "/compare/n8n-vs-make-vs-zapier"];
 
 // One urlset stays valid well past the current catalog (~6k URLs, under 1MB).
 // Google's cap is 50,000 URLs and 50MB. generateSitemaps would turn sitemap.xml

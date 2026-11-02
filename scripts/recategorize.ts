@@ -10,6 +10,7 @@ import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { CatalogPublication, runWithPublication } from "./lib/catalog-publication";
+import { hasSeoMarketingIntent } from "./lib/category-matcher";
 
 const adapter = new PrismaPg(process.env.DATABASE_URL!);
 const prisma = new PrismaClient({ adapter });
@@ -198,6 +199,12 @@ function findBestCategory(
   tool: { name: string; tagline: string; description: string },
   currentCategory: string,
 ): string | null {
+  // Marketing automation and AI search tools belong with their use case,
+  // before generic communication/automation/AI implementation rules.
+  if (hasSeoMarketingIntent([tool.name, tool.tagline])) {
+    return currentCategory === "seo-marketing" ? null : "seo-marketing";
+  }
+
   for (const rule of RULES) {
     if (rule.target === currentCategory) continue;
 

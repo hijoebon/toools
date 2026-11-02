@@ -104,6 +104,8 @@ Both importers require `DATABASE_URL`. Awesome imports optionally use `GITHUB_TO
 
 ## Documentation
 
+- [Product versioning and release workflow](docs/versioning.md)
+- [Changelog](CHANGELOG.md)
 - [Project guide: curation rules, imports, architecture, deployment, and analytics](docs/project-guide.md)
 - [SEO and AI search visibility: implementation and verification](docs/seo-geo-implementation.md)
 - [Local development performance analysis](docs/local-dev-performance-analysis-2026-10-13.md)

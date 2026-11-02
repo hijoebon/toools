@@ -78,10 +78,10 @@ const categories = [
     sortOrder: 6,
   },
   {
-    name: "SEO & Marketing",
+    name: "SEO & GEO & Marketing",
     slug: "seo-marketing",
     icon: "trending-up",
-    description: "SEO analysis, marketing automation, and growth tools",
+    description: "SEO analysis, generative engine optimization (GEO), AI search visibility, and marketing tools",
     sortOrder: 7,
   },
   {
@@ -1079,7 +1079,7 @@ const tools: ToolDef[] = [
     tags: ["Audio", "AI", "Open Source"],
   },
 
-  // ===== SEO & Marketing =====
+  // ===== SEO & GEO & Marketing =====
   {
     name: "Ahrefs",
     tagline: "All-in-one SEO toolset",

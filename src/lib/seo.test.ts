@@ -6,6 +6,7 @@ import { buildSitemap, SITEMAP_INDEX_URL_LIMIT } from "./seo-sitemap";
 import robots from "../app/robots";
 import { toolMetricQuery } from "./tool-metrics";
 import { HTML_METADATA_BOTS } from "./crawlers";
+import { currentRelease } from "./releases";
 
 test("AI search crawlers receive blocking metadata while the default limited crawlers remain covered", () => {
   for (const agent of ["OAI-SearchBot", "ChatGPT-User", "PerplexityBot", "Claude-SearchBot", "Bingbot", "facebookexternalhit", "Twitterbot", "Google-InspectionTool"]) assert.ok(HTML_METADATA_BOTS.test(agent), agent);
@@ -96,6 +97,7 @@ test("sitemap exposes stored content dates and omits dates it does not have", ()
   assert.equal(iso(siteUrl("/stacks")), "2026-10-13T00:00:00.000Z");
   assert.equal(iso(siteUrl("/about")), undefined);
   assert.equal(iso(siteUrl("/editorial-policy")), "2026-10-13T00:00:00.000Z");
+  assert.equal(iso(siteUrl("/changelog")), `${currentRelease.date}T00:00:00.000Z`);
   assert.equal(iso(siteUrl("/stacks/ai-product-builder")), "2026-10-13T00:00:00.000Z");
   assert.ok(sitemap.length < SITEMAP_INDEX_URL_LIMIT);
 });
@@ -151,7 +153,7 @@ test("tool metadata and software structured data use stored fields without inven
 
 test("llms.txt names the directory, key sections, and citation limits", () => {
   const text = llmsTxt();
-  for (const path of ["/tools", "/stacks", "/categories", "/editorial-policy", "/how-we-curate"]) assert.match(text, new RegExp(path.replaceAll("/", "\\/")));
+  for (const path of ["/tools", "/stacks", "/categories", "/editorial-policy", "/how-we-curate", "/changelog"]) assert.match(text, new RegExp(path.replaceAll("/", "\\/")));
   assert.match(text, /Do not invent ratings/);
   assert.match(text, /q query parameter/);
   assert.equal(text.startsWith("# Toools"), true);

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { cache } from "react";
 import { stackPreviews, type StackPreview } from "@/lib/stacks-data";
 import { catalogCache } from "@/lib/catalog-cache";
+import { getStackPreviewWebsite } from "@/lib/stack-preview-websites";
 
 export const getCatalogStackSlugs = catalogCache(
   () => prisma.stack.findMany({ select: { slug: true } }),
@@ -18,7 +19,7 @@ export const stackTags: Record<string, string[]> = {
   "startup-foundation": ["#startup", "#team", "#early-stage"],
   "open-source-maintainer": ["#open-source", "#maintainer", "#community"],
   "ai-product-builder": ["#ai", "#product", "#builder"],
-  "marketing-seo-growth": ["#marketing", "#seo", "#growth"],
+  "marketing-seo-growth": ["#marketing", "#seo", "#geo", "#growth"],
   "data-insights-stack": ["#data", "#analytics", "#insights"],
   "design-workflow": ["#design", "#ui-ux", "#handoff"],
   "remote-team-ops": ["#remote", "#team", "#async"],
@@ -68,6 +69,7 @@ export type StackDetail = {
   slug: string;
   name: string;
   description: string;
+  isFallback: boolean;
   stages: StackStage[];
 };
 
@@ -175,22 +177,23 @@ function previewToDetail(stack: StackPreview): StackDetail {
     slug: stack.slug,
     name: stack.name,
     description: stack.description,
+    isFallback: true,
     stages: stack.stages.map((stage, idx) => ({
       id: `preview-${idx}`,
       name: stage.name,
-      description: null,
-      editorNote: null,
+      description: stage.description ?? null,
+      editorNote: stage.editorNote ?? null,
       tools: stage.tools.map((tool) => ({
         slug: null,
         name: tool.name,
         tagline: "",
-        pricing: "FREEMIUM",
+        pricing: null,
         viewCount: null,
         clickCount: null,
         githubStars: null,
         phVotes: null,
         iconUrl: null,
-        url: null,
+        url: getStackPreviewWebsite(tool.name),
         initial: tool.initial,
         color: tool.color,
       })),
@@ -281,6 +284,7 @@ const getCachedStackBySlug = catalogCache(async (slug: string): Promise<StackDet
     slug: stack.slug,
     name: stack.name,
     description: stack.description,
+    isFallback: false,
     stages: stack.stages.map((stage, idx) => {
       const stageRows = stageToolRows[idx];
       const tools = stageRows.map((t) => mapToolToStageTool(t, preview));

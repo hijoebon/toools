@@ -38,6 +38,27 @@ The HTTPS writer runs tool, alias, and discovery changes together in one transac
 
 Publication and edits to existing approved tools also require the cache configuration described in [Catalog operations](catalog-operations.md). Importers refresh the public catalog once after committed approved-tool updates. New pending tools do not invalidate public content. For a reviewed approval SQL file use `npm run sql:publish -- --file path/to/reviewed.sql`; if publication committed and refresh failed, retry only `npm run cache:refresh`.
 
+## SEO, GEO, and marketing coverage
+
+The public category is **SEO & GEO & Marketing**; its stable slug remains `seo-marketing` so existing category URLs and tool relationships continue to work. GEO means generative engine optimization / AI search visibility here. Discovery deliberately uses full topic names and phrases rather than the ambiguous `geo` topic, which also includes geographic software.
+
+Preview only this category's sources without spending the candidate budget on other categories:
+
+```bash
+npm run import:github -- --config scripts/config/github-seo-marketing-sources.json --dry-run --limit 500 --max-per-source 30
+```
+
+Remove `--dry-run` to import discovered candidates as `PENDING`, using the database and cache configuration above. Both the default and category-specific source configurations keep the 50-star minimum and the existing repository exclusions. Category-specific sources run before generic automation and AI sources in the default configuration because explicit discovery hints determine a new tool's initial category. Imports preserve the category and moderation of existing records.
+
+A separate [reviewed tool list](../scripts/config/seo-marketing-tools.json) covers twelve concrete GitHub tools, including technical SEO, GEO / AI visibility, email marketing, and social publishing. This is a bounded editorial addition, separate from automatic discovery. Generate and inspect its targeted SQL, then publish it using the existing catalog publication workflow:
+
+```bash
+npm run curate:seo-marketing
+npm run sql:publish -- --file scripts/sql/curate-seo-marketing.sql
+```
+
+The first command generates a SQL artifact without connecting to a database. The second command applies the reviewed changes and refreshes the public catalog. It is also the way to add these tools after seeding a fresh catalog; running the full seed again is unnecessary. Existing rejected tools stay rejected. See [the coverage review](seo-geo-marketing-coverage.md) for evidence, scope, and operating-cost notes. Source configuration and SQL generation alone do not update the live catalog.
+
 ## CLI options
 
 | Option | Default | Meaning |

@@ -4,6 +4,7 @@ import { Wordmark } from "@/components/logo";
 import { GithubStarLink } from "@/components/github-star-link";
 import { FooterUpdatedAt } from "@/components/footer-updated-at";
 import { GITHUB_REPO_URL } from "@/lib/site";
+import { currentRelease } from "@/lib/releases";
 
 function FooterUpdatedAtFallback() {
   return <span className="text-muted-foreground/50">Loading update time…</span>;
@@ -13,7 +14,7 @@ export function Footer() {
   return (
     <footer className="mt-auto border-t border-border/60">
       <div className="mx-auto max-w-[1200px] px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <Wordmark height={20} className="text-foreground" />
             <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
@@ -23,7 +24,7 @@ export function Footer() {
               <GithubStarLink variant="button" />
             </div>
           </div>
-          <nav className="flex gap-8 text-sm">
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-6 text-sm min-[480px]:grid-cols-3">
             <div className="flex flex-col gap-2.5">
               <span className="text-sm font-semibold text-foreground">Explore</span>
               <Link href="/stacks" className="text-muted-foreground transition-colors hover:text-foreground">
@@ -64,11 +65,23 @@ export function Footer() {
               <a href="/llms.txt" className="text-muted-foreground transition-colors hover:text-foreground">
                 llms.txt
               </a>
+              <Link href="/changelog" className="text-muted-foreground transition-colors hover:text-foreground">
+                Changelog
+              </Link>
             </div>
           </nav>
         </div>
         <div className="mt-8 flex flex-col gap-1 border-t border-border/40 pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Toools</span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span>© {new Date().getFullYear()} Toools</span>
+            <Link
+              href={`/changelog#v${currentRelease.version}`}
+              aria-label={`Toools version ${currentRelease.version}, view changelog`}
+              className="inline-flex min-h-11 items-center rounded-sm font-mono text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+            >
+              v{currentRelease.version}
+            </Link>
+          </div>
           <Suspense fallback={<FooterUpdatedAtFallback />}>
             <FooterUpdatedAt />
           </Suspense>

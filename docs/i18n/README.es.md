@@ -104,6 +104,8 @@ Ambos importadores necesitan `DATABASE_URL`. Awesome admite `GITHUB_TOKEN` para 
 
 ## Documentación
 
+- [Versiones del producto y proceso de publicación](../../docs/versioning.md)
+- [Registro de cambios](../../CHANGELOG.md)
 - [Guía del proyecto: selección, importaciones, arquitectura, despliegue y analítica](../../docs/project-guide.md)
 - [SEO y visibilidad en búsquedas con IA: implementación y verificación](../../docs/seo-geo-implementation.md)
 - [Análisis del rendimiento del desarrollo local](../../docs/local-dev-performance-analysis-2026-10-13.md)

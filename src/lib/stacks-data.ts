@@ -1,5 +1,9 @@
+import { marketingGrowthStack } from "@/lib/marketing-growth-stack";
+
 export interface StackStagePreview {
   name: string;
+  description?: string;
+  editorNote?: string;
   tools: { name: string; initial: string; color: string }[];
 }
 
@@ -91,18 +95,13 @@ export const stackPreviews: StackPreview[] = [
     ],
   },
   {
-    slug: "marketing-seo-growth",
-    name: "Marketing & SEO Growth",
-    tagline: "Research keywords, create content, and measure what drives growth.",
-    description: "A full-funnel marketing stack — SEO research, content production, distribution, and analytics for teams focused on organic growth.",
-    icon: "megaphone",
-    audience: "Marketers & growth teams",
-    stages: [
-      { name: "Research", tools: [{ name: "Ahrefs", initial: "A", color: "#FF8800" }, { name: "Semrush", initial: "S", color: "#FF642D" }, { name: "Ubersuggest", initial: "U", color: "#FF7A59" }] },
-      { name: "Content", tools: [{ name: "Notion", initial: "N", color: "#1C1917" }, { name: "Grammarly", initial: "G", color: "#15C39A" }, { name: "Hemingway", initial: "H", color: "#4B5563" }] },
-      { name: "Distribute", tools: [{ name: "Buffer", initial: "B", color: "#2C4BFF" }, { name: "Mailchimp", initial: "M", color: "#FFE01B" }, { name: "ConvertKit", initial: "C", color: "#FB6970" }] },
-      { name: "Measure", tools: [{ name: "Google Search Console", initial: "G", color: "#4285F4" }, { name: "Mixpanel", initial: "M", color: "#7856FF" }, { name: "Hotjar", initial: "H", color: "#FF3C00" }] },
-    ],
+    ...marketingGrowthStack,
+    stages: marketingGrowthStack.stages.map((stage) => ({
+      name: stage.name,
+      description: stage.description,
+      editorNote: stage.editorNote,
+      tools: stage.tools.map(({ name, initial, color }) => ({ name, initial, color })),
+    })),
   },
   {
     slug: "data-insights-stack",

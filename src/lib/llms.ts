@@ -22,6 +22,7 @@ export function llmsTxt() {
     link("/how-we-curate", "How we curate", "Sources and how recent additions, featured picks, and workflow batches are chosen."),
     link("/editorial-policy", "Editorial policy", "How facts, recommendations, dates, prices, and corrections are handled."),
     link("/about", "About", "Who maintains Toools and how to report a correction."),
+    link("/changelog", "Changelog", "Toools product versions, dated release notes, and clearly marked unreleased changes."),
     link("/compare/n8n-vs-make-vs-zapier", "n8n vs Make vs Zapier", "Source-linked comparison of deployment, billing, and licensing. It does not declare a universal winner or a price."),
     "",
     "## Citing and using listings",

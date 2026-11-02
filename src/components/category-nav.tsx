@@ -159,7 +159,7 @@ export function CategoryGrid({ categories }: { categories: CategoryItem[] }) {
                 <Icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors duration-200" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-sm font-semibold truncate group-hover:text-primary transition-colors duration-200">
+                <h3 className="text-sm font-semibold leading-snug group-hover:text-primary transition-colors duration-200">
                   {cat.name}
                 </h3>
                 {cat._count && (

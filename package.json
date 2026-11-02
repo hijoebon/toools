@@ -1,23 +1,28 @@
 {
   "name": "toools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "private": true,
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev",
     "dev:webpack": "next dev --webpack",
+    "prebuild": "npm run release:check",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "tsx --test src/lib/*.test.ts src/app/api/metrics/flush/handler.test.ts scripts/lib/*.test.ts",
+    "test": "tsx --test src/lib/*.test.ts src/app/api/metrics/flush/handler.test.ts scripts/lib/*.test.ts scripts/lib/*.test.mjs",
     "backfill:signals": "tsx scripts/backfill-trust-signals.ts",
     "import:github": "tsx scripts/import-github.ts",
+    "curate:seo-marketing": "tsx scripts/curate-seo-marketing.ts",
     "sources:inspect": "tsx scripts/inspect-tool-sources.ts",
     "cache:refresh": "tsx scripts/refresh-catalog.ts",
     "sql:publish": "tsx scripts/publish-sql.ts",
     "recovery:cloud": "tsx scripts/cloud-recovery.ts",
-    "test:imports": "tsx --test scripts/lib/*.test.ts"
+    "test:imports": "tsx --test scripts/lib/*.test.ts",
+    "release": "node scripts/release.mjs",
+    "release:check": "node scripts/release.mjs check",
+    "release:notes": "node scripts/release.mjs notes"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

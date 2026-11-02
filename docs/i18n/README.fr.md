@@ -104,6 +104,8 @@ Les deux importeurs nécessitent `DATABASE_URL`. Awesome peut utiliser `GITHUB_T
 
 ## Documentation
 
+- [Versions du produit et procédure de publication](../../docs/versioning.md)
+- [Journal des modifications](../../CHANGELOG.md)
 - [Guide du projet : sélection, imports, architecture, déploiement et analyse](../../docs/project-guide.md)
 - [SEO et visibilité dans les recherches par IA : mise en œuvre et vérification](../../docs/seo-geo-implementation.md)
 - [Analyse des performances du développement local](../../docs/local-dev-performance-analysis-2026-10-13.md)

@@ -71,6 +71,11 @@ export default async function StackDetailPage({ params }: StackPageProps) {
               <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-muted-foreground">
                 {guide?.description || stack.description}
               </p>
+              {stack.isFallback && (
+                <p role="status" className="mt-4 max-w-[65ch] rounded-lg border border-border bg-muted/40 px-3 py-2.5 text-sm leading-relaxed text-muted-foreground">
+                  Showing saved workflow picks while live catalog details are unavailable. Tool cards open their official websites.
+                </p>
+              )}
             </div>
           </div>
           {tags.length > 0 && (

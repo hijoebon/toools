@@ -14,6 +14,7 @@ const navLinks = [
   { href: "/stacks", label: "Stacks" },
   { href: "/tools", label: "Browse" },
   { href: "/categories", label: "Categories" },
+  { href: "/changelog", label: "Changelog" },
   { href: "/submit", label: "Submit" },
 ];
 

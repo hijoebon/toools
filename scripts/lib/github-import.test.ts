@@ -93,6 +93,35 @@ test('repository filtering rejects non-tool discovery noise and does not treat u
   assert.equal(candidate.discovery.metadata?.pricingNeedsReview, true);
 });
 
+test('repository descriptions recover SEO and GEO purpose when GitHub topics omit it', () => {
+  const discovery = { source: 'GITHUB_REPOSITORY' as const, method: 'keyword', sourceKey: 'crawler', sourceUrl: 'https://github.com/search?q=crawler' };
+  for (const metadata of [
+    { name: 'Site Auditor', topics: ['crawler', 'golang'], description: 'A self-hosted SEO crawler for technical audits and broken-link reports' },
+    { name: 'Search Visibility', topics: ['ai', 'llm', 'gpt', 'sdk', 'typescript'], description: 'Measure AI search visibility and optimize brand presence in generative search' },
+    { name: 'Campaign Manager', topics: [], description: 'Self-hosted newsletter and email campaign manager' },
+  ]) {
+    const candidate = repositoryCandidate(repoFixture(metadata), discovery);
+    assert.equal(candidate.categorySlug, undefined);
+    assert(candidate.categoryHints.includes(metadata.description));
+    assert.equal(matchCategory(candidate.categoryHints), 'seo-marketing', metadata.name);
+  }
+});
+
+test('description fallback does not force generic crawlers or geographic GEO projects into marketing', () => {
+  const discovery = { source: 'GITHUB_REPOSITORY' as const, method: 'topic', sourceKey: 'crawler', sourceUrl: 'https://github.com/topics/crawler' };
+  for (const metadata of [
+    { topics: ['crawler', 'framework'], description: 'A crawler framework for extracting structured data from websites' },
+    { topics: ['geo', 'geospatial'], description: 'Geospatial indexing and geometry calculations for mapping applications' },
+  ]) {
+    const candidate = repositoryCandidate(repoFixture(metadata), discovery);
+    assert.deepEqual(candidate.categoryHints, metadata.topics);
+    assert.notEqual(matchCategory(candidate.categoryHints), 'seo-marketing');
+  }
+  const curated = repositoryCandidate(repoFixture({ topics: ['framework'], description: 'A framework with SEO integrations' }), discovery, 'development');
+  assert.equal(curated.categorySlug, 'development');
+  assert.deepEqual(curated.categoryHints, ['development', 'framework']);
+});
+
 test('GitHub search paginates with a fixed page size, never duplicating the final partial page', async () => {
   const seen: number[] = [];
   const client = new GithubClient({ sleep: noSleep, fetch: async (input, init) => {

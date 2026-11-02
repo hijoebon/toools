@@ -13,19 +13,22 @@ type MetricRecorderOptions = {
 
 export function createMetricRecorder(options: MetricRecorderOptions) {
   return async function record(toolId: string, metric: ToolMetricEvent["metric"]) {
+    const mode = options.mode();
+    // A local preview may read the live catalog without creating statistics.
+    if (mode === "disabled") return;
+    if (mode && mode !== "direct" && mode !== "queue") throw new Error("Invalid TOOL_METRICS_MODE");
+
     const event: ToolMetricEvent = {
       id: (options.id ?? randomUUID)(),
       toolId,
       metric,
       occurredAt: new Date((options.now ?? Date.now)()).toISOString(),
     };
-    const mode = options.mode();
     if (!mode || mode === "direct") {
       // Compatible with the existing schema until the receipt migration is live.
       await options.direct(event);
       return;
     }
-    if (mode !== "queue") throw new Error("Invalid TOOL_METRICS_MODE");
     let result: { accepted: true; wakeScheduled: boolean };
     try {
       result = await options.enqueue(event);

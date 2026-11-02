@@ -32,6 +32,35 @@ function setup(mode: string | undefined) {
   } };
 }
 
+test("disabled recording creates no event or persistence, queue, or logging side effects", async () => {
+  const calls: string[] = [];
+  const record = createMetricRecorder({
+    mode: () => "disabled",
+    direct: async () => { calls.push("direct"); },
+    enqueue: async () => { calls.push("enqueue"); return { accepted: true, wakeScheduled: true }; },
+    persist: async () => { calls.push("persist"); },
+    warn: () => { calls.push("warn"); },
+    id: () => { calls.push("id"); return "unused-id"; },
+    now: () => { calls.push("now"); return 0; },
+  });
+  await record("tool", "view");
+  await record("tool", "click");
+  assert.deepEqual(calls, []);
+});
+
+test("an unknown recording mode still fails before producing an event or changing data", async () => {
+  const record = createMetricRecorder({
+    mode: () => "unexpected",
+    direct: async () => assert.fail("direct should not be called"),
+    enqueue: async () => assert.fail("enqueue should not be called"),
+    persist: async () => assert.fail("persist should not be called"),
+    warn: () => assert.fail("warn should not be called"),
+    id: () => assert.fail("id should not be called"),
+    now: () => assert.fail("now should not be called"),
+  });
+  await assert.rejects(record("tool", "view"), /^Error: Invalid TOOL_METRICS_MODE$/);
+});
+
 test("queue mode records durably without a database write per visit", async () => {
   const state = setup("queue");
   await state.record("tool", "view");

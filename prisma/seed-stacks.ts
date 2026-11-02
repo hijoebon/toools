@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { CatalogPublication, runWithPublication } from "../scripts/lib/catalog-publication";
+import { marketingGrowthStack } from "../src/lib/marketing-growth-stack";
 
 const adapter = new PrismaPg(process.env.DATABASE_URL!);
 const prisma = new PrismaClient({ adapter });
@@ -272,47 +273,11 @@ const stacks = [
     ],
   },
   {
-    name: "Marketing & SEO Growth",
-    slug: "marketing-seo-growth",
-    tagline: "Research keywords, create content, and measure what drives growth.",
-    description:
-      "A full-funnel marketing stack — SEO research, content production, distribution, and analytics for teams focused on organic growth.",
-    icon: "megaphone",
-    sortOrder: 6,
-    stages: [
-      {
-        name: "Keyword Research",
-        description: "Find opportunities and understand search intent.",
-        editorNote:
-          "Ahrefs for backlink and keyword depth. Semrush for competitive gaps. Ubersuggest for quick ideas on a budget.",
-        sortOrder: 1,
-        tools: ["ahrefs", "semrush", "ubersuggest"],
-      },
-      {
-        name: "Content Creation",
-        description: "Plan, write, and polish content that ranks.",
-        editorNote:
-          "Notion for briefs and calendars. Grammarly for clarity. Hemingway Editor for readable prose.",
-        sortOrder: 2,
-        tools: ["notion", "grammarly", "hemingway-editor"],
-      },
-      {
-        name: "Distribution",
-        description: "Publish across email and social channels.",
-        editorNote:
-          "Buffer for social scheduling. Mailchimp for campaigns. ConvertKit for creator-style newsletters.",
-        sortOrder: 3,
-        tools: ["buffer", "mailchimp", "convertkit"],
-      },
-      {
-        name: "Measurement",
-        description: "Track SEO performance and on-site behavior.",
-        editorNote:
-          "Google Search Console for search visibility. Mixpanel for product events. Hotjar for qualitative session insight.",
-        sortOrder: 4,
-        tools: ["google-search-console", "mixpanel", "hotjar"],
-      },
-    ],
+    ...marketingGrowthStack,
+    stages: marketingGrowthStack.stages.map((stage) => ({
+      ...stage,
+      tools: stage.tools.map((tool) => tool.slug),
+    })),
   },
   {
     name: "Data & Insights",

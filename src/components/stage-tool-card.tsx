@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Star, Triangle } from "lucide-react";
+import { ArrowUpRight, Star, Triangle } from "lucide-react";
 import { ToolAvatar } from "@/components/tool-avatar";
 import { ToolEngagement } from "@/components/tool-engagement";
 import type { StackStageTool } from "@/lib/stacks";
+import { getStackToolDestination } from "@/lib/stack-tool-links";
 
 const pricingLabels: Record<string, string> = {
   FREE: "Free",
@@ -14,6 +15,7 @@ const pricingLabels: Record<string, string> = {
 const compactNumber = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
 
 export function StageToolCard({ tool }: { tool: StackStageTool }) {
+  const destination = getStackToolDestination(tool);
   const content = (
     <>
       {tool.slug && tool.url ? (
@@ -53,19 +55,38 @@ export function StageToolCard({ tool }: { tool: StackStageTool }) {
             </span>
           )}
         </div>
-        <ToolEngagement viewCount={tool.viewCount} clickCount={tool.clickCount} className="mt-2" />
+        {(tool.viewCount != null || tool.clickCount != null) && (
+          <ToolEngagement viewCount={tool.viewCount} clickCount={tool.clickCount} className="mt-2" />
+        )}
+        {destination?.external && (
+          <span className="mt-2 inline-flex items-center gap-1 text-[0.6875rem] text-muted-foreground">
+            Visit website <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
+          </span>
+        )}
+        {!destination && (
+          <p className="mt-2 text-[0.6875rem] text-muted-foreground">Link unavailable</p>
+        )}
       </div>
     </>
   );
 
   const className =
-    "flex gap-2.5 p-3.5 rounded-xl border border-border/80 bg-card shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all";
+    "flex gap-2.5 p-3.5 rounded-xl border border-border/80 bg-card shadow-sm" +
+    (destination ? " hover:shadow-md hover:-translate-y-0.5 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring" : "");
 
-  if (tool.slug) {
+  if (destination && !destination.external) {
     return (
-      <Link href={`/tools/${tool.slug}`} className={className}>
+      <Link href={destination.href} className={className}>
         {content}
       </Link>
+    );
+  }
+
+  if (destination) {
+    return (
+      <a href={destination.href} target="_blank" rel="noopener noreferrer" aria-label={`${tool.name} website (opens in a new tab)`} className={className}>
+        {content}
+      </a>
     );
   }
 

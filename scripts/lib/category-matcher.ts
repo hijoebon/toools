@@ -1,3 +1,29 @@
+const SEO_MARKETING_KEYWORDS = [
+  "seo", "search-engine-optimization", "technical-seo", "seo-audit",
+  "search-engine-marketing", "rank-tracking", "serp-tracking", "serp",
+  "keyword-research", "backlink", "backlinks", "link-building",
+  "generative-engine-optimization", "answer-engine-optimization",
+  "ai-search-optimization", "ai-search-visibility", "ai-visibility",
+  "llm-visibility", "llm-search-optimization", "llm-seo", "ai-seo",
+  "marketing", "marketing-automation", "email-marketing", "email-campaign",
+  "email-campaigns", "social-media", "social-media-management",
+  "social-media-scheduling", "advertising", "growth", "copywriting",
+  "branding", "newsletter", "newsletters",
+];
+
+function normalizeHint(hint: string): string {
+  return hint.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+// Explicit tool purpose takes precedence over implementation topics such as
+// AI, TypeScript, SDK or automation. Bare "geo" is ambiguous with geography.
+export function hasSeoMarketingIntent(hints: string[]): boolean {
+  return hints.some((hint) => {
+    const normalized = `-${normalizeHint(hint)}-`;
+    return SEO_MARKETING_KEYWORDS.some((keyword) => normalized.includes(`-${keyword}-`));
+  });
+}
+
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
   "ai-assistants": [
     "ai", "artificial-intelligence", "machine-learning", "llm", "chatbot",
@@ -26,10 +52,7 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
     "video", "audio", "podcast", "streaming", "recording", "music",
     "transcription", "subtitle", "animation", "screen-recording",
   ],
-  "seo-marketing": [
-    "seo", "marketing", "email-marketing", "social-media", "advertising",
-    "growth", "conversion", "copywriting", "branding", "newsletter",
-  ],
+  "seo-marketing": SEO_MARKETING_KEYWORDS,
   "data-analytics": [
     "analytics", "dashboard", "data", "visualization", "bi",
     "business-intelligence", "spreadsheet", "database", "sql", "charts",
@@ -83,14 +106,18 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
 };
 
 export function matchCategory(hints: string[]): string {
-  const normalizedHints = hints.map((h) =>
-    h.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-")
-  ).filter(Boolean);
+  if (hasSeoMarketingIntent(hints)) return "seo-marketing";
+
+  const normalizedHints = hints.map(normalizeHint).filter(Boolean);
 
   let bestMatch = "utilities";
   let bestScore = 0;
 
   for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    // This category already used whole-word purpose matching above; do not let
+    // substring scoring turn unrelated words such as "Seoul" into SEO tools.
+    if (category === "seo-marketing") continue;
+
     let score = 0;
     for (const hint of normalizedHints) {
       for (const keyword of keywords) {
@@ -123,6 +150,11 @@ export const PH_TOPIC_MAP: Record<string, string> = {
   "time-tracking": "productivity",
   "marketing": "seo-marketing",
   "seo": "seo-marketing",
+  "search-engine-optimization": "seo-marketing",
+  "generative-engine-optimization": "seo-marketing",
+  "answer-engine-optimization": "seo-marketing",
+  "ai-search-visibility": "seo-marketing",
+  "marketing-automation": "seo-marketing",
   "email-marketing": "seo-marketing",
   "social-media-marketing": "seo-marketing",
   "analytics": "data-analytics",
