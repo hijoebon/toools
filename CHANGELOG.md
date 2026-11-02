@@ -4,6 +4,17 @@ Product changes to Toools. Product versions use major.minor.patch numbering.
 
 <!-- Generated from src/data/changelog.json. Edit that file, then run npm run release:notes. -->
 
+## [0.2.1] — 2026-11-02
+
+More useful tools from GitHub
+
+Thirty-five reviewed open-source tools fill gaps in twelve categories, from desktop productivity and media editing to AI assistants, deployment and security.
+
+### Added
+
+- 35 reviewed GitHub tools across twelve categories, including LibreChat, Goose, Kdenlive, OCRmyPDF, Pocket ID, Dozzle, Kopia, and AutoKey.
+- Repository and license evidence, dated GitHub popularity signals, platforms, and practical use cases for the new listings.
+
 ## [0.2.0] — 2026-11-02
 
 SEO, GEO & Marketing workflows

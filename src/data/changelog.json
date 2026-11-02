@@ -8,6 +8,18 @@
   },
   "releases": [
     {
+      "version": "0.2.1",
+      "date": "2026-11-02",
+      "title": "More useful tools from GitHub",
+      "summary": "Thirty-five reviewed open-source tools fill gaps in twelve categories, from desktop productivity and media editing to AI assistants, deployment and security.",
+      "added": [
+        "35 reviewed GitHub tools across twelve categories, including LibreChat, Goose, Kdenlive, OCRmyPDF, Pocket ID, Dozzle, Kopia, and AutoKey.",
+        "Repository and license evidence, dated GitHub popularity signals, platforms, and practical use cases for the new listings."
+      ],
+      "changed": [],
+      "fixed": []
+    },
+    {
       "version": "0.2.0",
       "date": "2026-11-02",
       "title": "SEO, GEO & Marketing workflows",
