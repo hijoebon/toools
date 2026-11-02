@@ -8,6 +8,18 @@
   },
   "releases": [
     {
+      "version": "0.2.2",
+      "date": "2026-11-02",
+      "title": "More tools for creative and everyday work",
+      "summary": "Forty-two reviewed GitHub tools broaden fifteen categories, from visual AI and graphics to databases, desktop productivity, and team infrastructure.",
+      "added": [
+        "42 reviewed GitHub tools across fifteen categories, including ComfyUI, Graphite Editor, Kando, Deskflow, mise, Harlequin, and BillionMail.",
+        "Verified repository and license evidence, dated GitHub star counts, platform scope, and practical use cases for the new listings."
+      ],
+      "changed": [],
+      "fixed": []
+    },
+    {
       "version": "0.2.1",
       "date": "2026-11-02",
       "title": "More useful tools from GitHub",

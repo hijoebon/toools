@@ -1,0 +1,2480 @@
+[
+  {
+    "name": "Page Assist",
+    "slug": "page-assist",
+    "categorySlug": "ai-assistants",
+    "url": "https://docs.pageassist.xyz/",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "browser-extension",
+      "local-ai",
+      "ollama",
+      "ai-chat"
+    ],
+    "tagline": "Use local AI from a browser sidebar and chat interface",
+    "description": "Page Assist is a browser extension that connects supported local AI providers to a sidebar and web chat interface. Use it to discuss a page, work with selected content, or chat with a local model while browsing. The MIT-licensed extension supports Chromium-based browsers and Firefox. Local inference needs a compatible provider such as Ollama; optional cloud models and services can have separate fees.",
+    "useCases": [
+      "Ask a connected model about the page you are reading",
+      "Chat with a local model without leaving the browser",
+      "Switch between the sidebar and a full-page model interface"
+    ],
+    "legacyUrls": [
+      "https://chromewebstore.google.com/detail/page-assist-a-web-ui-for/jfgfiigpkhlkbnfnbobbkinehhfdhndo",
+      "https://chromewebstore.google.com/detail/page-assist/jfgfiigpkhlkbnfnbobbkinehhfdhndo"
+    ],
+    "github": "https://github.com/n4ze3m/page-assist",
+    "repositoryId": "625486047",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 8307,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.065Z",
+    "pushedAt": "2026-11-01T16:06:07Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/n4ze3m/page-assist",
+      "https://github.com/n4ze3m/page-assist/blob/main/README.md",
+      "https://github.com/n4ze3m/page-assist/blob/main/LICENCE",
+      "https://docs.pageassist.xyz/",
+      "https://chromewebstore.google.com/detail/page-assist-a-web-ui-for/jfgfiigpkhlkbnfnbobbkinehhfdhndo",
+      "https://chromewebstore.google.com/detail/page-assist/jfgfiigpkhlkbnfnbobbkinehhfdhndo"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README provides Chrome, Edge, and Firefox store links plus manual extension builds. Web denotes a browser extension, not an independently hosted model service.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T16:06:07Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "4c3853032ec840c3feb73401c11eda7e461b140c",
+        "licensePath": "LICENCE",
+        "licenseSha": "632e8dff11cd1d22c23e12658498b03d3bc406ae"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Semaphore UI",
+    "slug": "semaphore-ui",
+    "categorySlug": "automation",
+    "url": "https://semaphoreui.com",
+    "tagline": "Run infrastructure tasks and schedules from a web interface",
+    "description": "Semaphore UI provides a self-hosted interface for running Ansible playbooks, Terraform or OpenTofu tasks, and shell or PowerShell scripts. Organize jobs into projects, reuse task templates, schedule runs, and review task output. The public application is MIT licensed; Semaphore Cloud, commercial capabilities, and the infrastructure it operates may have separate costs.",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "ansible",
+      "infrastructure-automation",
+      "self-hosted",
+      "task-scheduling"
+    ],
+    "useCases": [
+      "Run Ansible playbooks through a shared interface",
+      "Schedule repeatable infrastructure tasks",
+      "Track task history and deployment output"
+    ],
+    "github": "https://github.com/semaphoreui/semaphore",
+    "repositoryId": "23267883",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 14360,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-02T09:24:07Z",
+    "defaultBranch": "develop",
+    "sources": [
+      "https://github.com/semaphoreui/semaphore",
+      "https://github.com/semaphoreui/semaphore/blob/develop/README.md",
+      "https://github.com/semaphoreui/semaphore/blob/develop/LICENSE",
+      "https://semaphoreui.com",
+      "https://semaphoreui.com/install/docker"
+    ],
+    "legacyUrls": [
+      "https://github.com/ansible-semaphore/semaphore"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README documents Docker, standalone binaries, Debian and RPM packages.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T09:24:07Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "98aa0ee1bef63a3a1fb0818e5a0cf09501eb4764",
+        "licensePath": "LICENSE",
+        "licenseSha": "d3e458db226d179fa37764bfd483e496008cc2a8"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Delta Chat Desktop",
+    "slug": "delta-chat-desktop",
+    "categorySlug": "communication",
+    "url": "https://delta.chat",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "messaging",
+      "desktop-chat",
+      "email",
+      "encrypted-chat"
+    ],
+    "tagline": "Use Delta Chat messaging from a desktop computer",
+    "description": "Delta Chat Desktop brings Delta Chat conversations to Windows, macOS, and Linux in an Electron application. Connect a supported chatmail or email account to exchange messages and files through a chat-focused interface. The desktop application is GPL-3.0 licensed; account provisioning and transport depend on the chosen provider. The separate experimental browser edition is outside this listing.",
+    "useCases": [
+      "Continue Delta Chat conversations from a desktop computer",
+      "Exchange messages and files through a supported account",
+      "Use a desktop chat interface alongside other work"
+    ],
+    "github": "https://github.com/deltachat/deltachat-desktop",
+    "repositoryId": "145452984",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 1631,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.075Z",
+    "pushedAt": "2026-11-02T09:54:14Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/deltachat/deltachat-desktop",
+      "https://github.com/deltachat/deltachat-desktop/blob/main/README.md",
+      "https://github.com/deltachat/deltachat-desktop/blob/main/LICENSE",
+      "https://delta.chat"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README provides Linux/Flatpak, macOS/Homebrew/DMG, and Windows download instructions. The experimental browser and WIP Tauri editions are not advertised as stable support.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T09:54:14Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "0319975e489eef39b5ddb74aeaa9b882d9559f4c",
+        "licensePath": "LICENSE",
+        "licenseSha": "94a9ed024d3859793618152ea559a168bbcbb5e2"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "dblab",
+    "slug": "dblab",
+    "categorySlug": "data-analytics",
+    "url": "https://dblab.app",
+    "tagline": "Work with local and remote databases from the terminal",
+    "description": "dblab is an interactive terminal client for PostgreSQL, MySQL, SQLite, Oracle, and SQL Server. Browse schemas, edit and run SQL, reuse connection profiles, and inspect result sets with keyboard navigation. The MIT-licensed application is distributed as a standalone binary for macOS, Linux, and Windows; any database hosting costs are separate.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "sql",
+      "database-client",
+      "terminal",
+      "cross-platform"
+    ],
+    "useCases": [
+      "Browse schemas in local or remote databases",
+      "Run SQL queries and navigate their results",
+      "Reuse connection profiles for several environments"
+    ],
+    "github": "https://github.com/danvergara/dblab",
+    "repositoryId": "352879222",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 3246,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-01T06:20:40Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/danvergara/dblab",
+      "https://github.com/danvergara/dblab/blob/main/README.md",
+      "https://github.com/danvergara/dblab/blob/main/LICENSE",
+      "https://dblab.app"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README explicitly lists precompiled Linux/macOS/Windows binaries and Homebrew installation.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T06:20:40Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "6045a8e7c8f905261b3b5d99fd177bec3cfd6e2d",
+        "licensePath": "LICENSE",
+        "licenseSha": "02f2a027f9930539200cddc79732689d57da7704"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Harlequin",
+    "slug": "harlequin",
+    "categorySlug": "data-analytics",
+    "url": "https://harlequin.sh",
+    "tagline": "Explore databases with a SQL IDE in your terminal",
+    "description": "Harlequin is a terminal SQL IDE with built-in DuckDB and SQLite adapters and optional connectors for additional databases. Open local database files, write queries, and inspect results without a desktop database client. The MIT-licensed application is installed as a Python tool; remote database services and optional integrations may have separate costs.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "sql",
+      "database-client",
+      "terminal",
+      "duckdb"
+    ],
+    "useCases": [
+      "Query local DuckDB and SQLite database files",
+      "Explore remote databases using adapter plugins",
+      "Inspect SQL results from a terminal workspace"
+    ],
+    "github": "https://github.com/tconbeer/harlequin",
+    "repositoryId": "635393461",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 6500,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-02T05:03:32Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/tconbeer/harlequin",
+      "https://github.com/tconbeer/harlequin/blob/main/README.md",
+      "https://github.com/tconbeer/harlequin/blob/main/LICENSE",
+      "https://harlequin.sh",
+      "https://harlequin.sh/docs/getting-started/index"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README documents uv, pip, pipx and Homebrew installation, explicitly supporting Linux, macOS and Windows.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T05:03:32Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "5aa431cdd8e8db7e2d5d1fd898ef93a2bb2d39fe",
+        "licensePath": "LICENSE",
+        "licenseSha": "04ec0c899f577594a5d3376111b40646924c71f1"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "LazySQL",
+    "slug": "lazysql",
+    "categorySlug": "data-analytics",
+    "url": "https://github.com/jorgerojas26/lazysql",
+    "tagline": "Manage database connections and SQL queries from the terminal",
+    "description": "LazySQL is a terminal database client with multiple connection profiles, tabs, a SQL editor, and Vim-style navigation. It is distributed as a Go binary and has documented builds for macOS, Windows, and Linux. The MIT-licensed project describes itself as alpha-stage; remote database hosting and external services are separate.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "sql",
+      "database-client",
+      "terminal",
+      "vim"
+    ],
+    "useCases": [
+      "Switch between saved database connections",
+      "Write and execute SQL from a terminal editor",
+      "Navigate database work in tabs with keyboard shortcuts"
+    ],
+    "github": "https://github.com/jorgerojas26/lazysql",
+    "repositoryId": "646677050",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 4406,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-10-20T23:42:25Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/jorgerojas26/lazysql",
+      "https://github.com/jorgerojas26/lazysql/blob/main/README.md",
+      "https://github.com/jorgerojas26/lazysql/blob/main/LICENSE.txt"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README documents Homebrew, go install and Windows/macOS/Linux release binaries.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-20T23:42:25Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "2fbfb35b6bf30b3476fff0ee6a3dfe92b1c0f1e0",
+        "licensePath": "LICENSE.txt",
+        "licenseSha": "6086b876c9d99dfaac24b00aaa85c97b4e20e920"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Pgweb",
+    "slug": "pgweb",
+    "categorySlug": "data-analytics",
+    "url": "https://sosedoff.github.io/pgweb",
+    "tagline": "Explore PostgreSQL through a lightweight web client",
+    "description": "Pgweb is a web-based PostgreSQL explorer distributed as a standalone application for macOS, Linux, and Windows. Browse database objects, run and analyze SQL, export table or query data, and reuse saved connections. The application is MIT licensed; database servers and hosting are separate.",
+    "platforms": [
+      "Web",
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "postgresql",
+      "database-client",
+      "sql",
+      "self-hosted"
+    ],
+    "useCases": [
+      "Explore PostgreSQL databases from a browser",
+      "Run SQL and export query results",
+      "Reuse bookmarks and multiple database sessions"
+    ],
+    "github": "https://github.com/sosedoff/pgweb",
+    "repositoryId": "24968828",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 9545,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-07-26T22:30:33Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/sosedoff/pgweb",
+      "https://github.com/sosedoff/pgweb/blob/main/README.md",
+      "https://github.com/sosedoff/pgweb/blob/main/LICENSE",
+      "https://sosedoff.github.io/pgweb"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README explicitly documents Mac/Linux/Windows standalone binaries and a browser-based interface.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-07-26T22:30:33Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "c8a3ad366b85d8c4ab95fb2d7e2fe8acc2b46e57",
+        "licensePath": "LICENSE",
+        "licenseSha": "4f622580fdc11a89b6b17b3c14b279ce64d7a124"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "rainfrog",
+    "slug": "rainfrog",
+    "categorySlug": "data-analytics",
+    "url": "https://github.com/achristmascarl/rainfrog",
+    "tagline": "Browse and query databases with a keyboard-driven terminal client",
+    "description": "rainfrog is a terminal database client with a highlighted SQL editor, session history, favorites, and shortcuts for navigating schemas and table metadata. PostgreSQL is its primary tested database, with other documented drivers available. The MIT-licensed project is under active development and documents breaking changes; hosting and database services are separate.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "sql",
+      "database-client",
+      "terminal",
+      "postgresql"
+    ],
+    "useCases": [
+      "Navigate database schemas and inspect table metadata",
+      "Write SQL with history and favorite queries",
+      "Copy query results without leaving the terminal"
+    ],
+    "github": "https://github.com/achristmascarl/rainfrog",
+    "repositoryId": "801100155",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 5390,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-02T03:19:43Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/achristmascarl/rainfrog",
+      "https://github.com/achristmascarl/rainfrog/blob/main/README.md",
+      "https://github.com/achristmascarl/rainfrog/blob/main/LICENSE",
+      "https://crates.io/crates/rainfrog"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README provides Cargo, Homebrew, release binaries and platform notes; selected Mac, Windows and Linux scope only.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T03:19:43Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "5f185de7390a7ec979b07fe5e0374df91a80ef31",
+        "licensePath": "LICENSE",
+        "licenseSha": "5b1b6e92455a91e024b333406d61b1686148a8e1"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Sling CLI",
+    "slug": "sling-cli",
+    "categorySlug": "data-analytics",
+    "url": "https://docs.slingdata.io",
+    "tagline": "Move data between databases, files, and object storage",
+    "description": "Sling CLI is a command-line tool for extracting data from supported sources and loading it into databases, files, or object storage. Configure repeatable replication tasks to move datasets without maintaining a custom transfer script for each pair of systems. The CLI is GPL-3.0 licensed; source and destination services, storage, and managed offerings may have separate charges.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "data-integration",
+      "etl",
+      "cli",
+      "data-pipelines"
+    ],
+    "useCases": [
+      "Copy datasets between supported databases",
+      "Load files or object-storage data into a database",
+      "Reuse replication configurations for repeatable transfers"
+    ],
+    "github": "https://github.com/slingdata-io/sling-cli",
+    "repositoryId": "304285216",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 919,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-01T18:50:07Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/slingdata-io/sling-cli",
+      "https://github.com/slingdata-io/sling-cli/blob/main/README.md",
+      "https://github.com/slingdata-io/sling-cli/blob/main/LICENSE",
+      "https://docs.slingdata.io",
+      "https://docs.slingdata.io/sling-cli/getting-started"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README documents macOS/Linux/Windows installers, Homebrew, Scoop and prebuilt release binaries.",
+      "license": "Official LICENSE text matches GPL-3.0; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T18:50:07Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "0f8f915b8f9312aa7f366cba8e84a567cac17dfd",
+        "licensePath": "LICENSE",
+        "licenseSha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "sqlit",
+    "slug": "sqlit",
+    "categorySlug": "data-analytics",
+    "url": "https://github.com/Maxteabag/sqlit",
+    "tagline": "Connect to databases and query them from a terminal workspace",
+    "description": "sqlit is a Python terminal database client with a connection manager, SQL completion, query history, and searchable results. It supports multiple database drivers and can discover local database containers or connect through supported cloud tools. The application is MIT licensed; optional drivers and remote database services may have their own requirements or charges.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "sql",
+      "database-client",
+      "terminal",
+      "python"
+    ],
+    "useCases": [
+      "Save connections and switch between databases",
+      "Browse schemas and run SQL with completion",
+      "Inspect and search query result sets"
+    ],
+    "github": "https://github.com/Maxteabag/sqlit",
+    "repositoryId": "1115482628",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 4964,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-10-28T06:52:40Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/Maxteabag/sqlit",
+      "https://github.com/Maxteabag/sqlit/blob/main/README.md",
+      "https://github.com/Maxteabag/sqlit/blob/main/LICENSE"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README documents pipx, uv and pip installation and OS keyring integration for macOS, Windows and Linux.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-28T06:52:40Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "fac2dbe04c7743ff772edb09a65668c50c226f72",
+        "licensePath": "LICENSE",
+        "licenseSha": "66415ffe1fa0f95abda901d352fcea3657fb51a2"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "gping",
+    "slug": "gping",
+    "categorySlug": "deploy-hosting",
+    "url": "https://github.com/orf/gping",
+    "tagline": "Graph response times for hosts and commands",
+    "description": "gping plots response-time measurements in the terminal. Compare ping latency across several hosts or graph how long local commands take to execute. The MIT-licensed utility runs on Windows, macOS, and Linux and is available through package managers or release binaries; network behavior still depends on the hosts and connections being measured.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "network-diagnostics",
+      "ping",
+      "terminal",
+      "monitoring"
+    ],
+    "useCases": [
+      "Compare latency to several hosts on one graph",
+      "Watch response-time changes during troubleshooting",
+      "Graph repeated command execution times"
+    ],
+    "github": "https://github.com/orf/gping",
+    "repositoryId": "44440501",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 12731,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-10-06T10:32:55Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/orf/gping",
+      "https://github.com/orf/gping/blob/main/readme.md",
+      "https://github.com/orf/gping/blob/main/LICENSE"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README explicitly lists Windows/Mac/Linux support and package-manager or release-binary installation.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-06T10:32:55Z"
+      },
+      "evidence": {
+        "readmePath": "readme.md",
+        "readmeSha": "5284d2dbaee2279a5352e8444a4851a4b576aea2",
+        "licensePath": "LICENSE",
+        "licenseSha": "c30fd43e2775122636ab9e0a9b0cd9d270fc87c4"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Komodo",
+    "slug": "komodo",
+    "categorySlug": "deploy-hosting",
+    "url": "https://komo.do",
+    "tagline": "Build and deploy applications across your servers",
+    "description": "Komodo provides a self-hosted dashboard for building software, deploying Docker workloads, and coordinating operations across multiple servers. Its Core service stores configuration while Periphery agents connect the servers you manage. The GPL-3.0 application can run with Docker Compose; server, database, and other infrastructure costs are separate.",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "self-hosted",
+      "docker",
+      "deployment",
+      "server-management"
+    ],
+    "useCases": [
+      "Deploy Docker workloads across multiple servers",
+      "Build application images from a central dashboard",
+      "Coordinate repeatable infrastructure operations"
+    ],
+    "github": "https://github.com/moghtech/komodo",
+    "repositoryId": "469321930",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 12840,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-10-23T07:49:32Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/moghtech/komodo",
+      "https://github.com/moghtech/komodo/blob/main/readme.md",
+      "https://github.com/moghtech/komodo/blob/main/LICENSE",
+      "https://komo.do",
+      "https://komo.do/docs/setup"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "Official setup guide documents Docker Compose for Core and Periphery agents for managed servers.",
+      "license": "Official LICENSE text matches GPL-3.0; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-23T07:49:32Z"
+      },
+      "evidence": {
+        "readmePath": "readme.md",
+        "readmeSha": "3f962daba29120f215115c5941767d7dd6f3b71f",
+        "licensePath": "LICENSE",
+        "licenseSha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Trippy",
+    "slug": "trippy",
+    "categorySlug": "deploy-hosting",
+    "url": "https://trippy.rs",
+    "tagline": "Investigate network routes, latency, and packet loss",
+    "description": "Trippy combines traceroute and ping in an interactive terminal interface for diagnosing network paths. Follow hop-by-hop latency and loss, compare routes, and use supported reporting modes during infrastructure troubleshooting. The Apache-2.0 application runs on macOS, Windows, and Linux; tracing capabilities depend on operating-system permissions and the network.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "network-diagnostics",
+      "traceroute",
+      "ping",
+      "terminal"
+    ],
+    "useCases": [
+      "Locate latency along a network route",
+      "Inspect packet loss at individual hops",
+      "Troubleshoot connectivity from a terminal interface"
+    ],
+    "github": "https://github.com/fujiapple852/trippy",
+    "repositoryId": "474961035",
+    "licenseSpdxId": "Apache-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 8130,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-02T02:53:01Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/fujiapple852/trippy",
+      "https://github.com/fujiapple852/trippy/blob/master/README.md",
+      "https://github.com/fujiapple852/trippy/blob/master/LICENSE",
+      "https://trippy.rs",
+      "https://trippy.rs/start/getting-started"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README explicitly documents Linux/BSD/macOS/Windows support, Cargo, package managers, and prebuilt binaries.",
+      "license": "Official LICENSE text matches Apache-2.0; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T02:53:01Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "d88c700dd09bd460a138f76405c3729fdb0e5ca8",
+        "licensePath": "LICENSE",
+        "licenseSha": "1b5ec8b78e237b5c3b3d812a7c0a6589d0f7161d"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Graphite Editor",
+    "slug": "graphite-editor",
+    "categorySlug": "design",
+    "url": "https://graphite.art",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "vector-graphics",
+      "node-editor",
+      "generative-design",
+      "browser-editor"
+    ],
+    "tagline": "Create vector and procedural graphics in a browser editor",
+    "description": "Graphite is an alpha-stage browser graphics editor combining vector tools, layer-based compositing, and node-based generative design. Create and adjust graphics through direct editing or reusable procedural operations. The source is available under a choice of MIT or Apache-2.0 licenses. This listing covers the graphics editor at graphite.art, which is a different product from the Graphite monitoring system.",
+    "useCases": [
+      "Create and edit vector artwork in a browser",
+      "Build reusable procedural graphics with a node graph",
+      "Explore variations through nondestructive editing operations"
+    ],
+    "github": "https://github.com/GraphiteEditor/Graphite",
+    "repositoryId": "258967860",
+    "licenseSpdxId": "Apache-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 27818,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.080Z",
+    "pushedAt": "2026-11-02T08:11:34Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/GraphiteEditor/Graphite",
+      "https://github.com/GraphiteEditor/Graphite/blob/master/README.md",
+      "https://github.com/GraphiteEditor/Graphite/blob/master/LICENSE-APACHE",
+      "https://graphite.art"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README links the browser alpha at editor.graphite.art and contributor build instructions. Future roadmap capabilities are omitted from the listing.",
+      "license": "README states dual MIT OR Apache-2.0 licensing; the full LICENSE-APACHE text was inspected and Apache-2.0 is the recorded choice.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T08:11:34Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "ad20249f120e9c033efff22604522a2e9ec4d6f4",
+        "licensePath": "LICENSE-APACHE",
+        "licenseSha": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+      },
+      "baselineMatches": [],
+      "identityNote": "Existing Graphite at graphite.readthedocs.org is a monitoring system, with a different site, repository, purpose, and category. Distinct name and slug avoid conflation."
+    }
+  },
+  {
+    "name": "delta",
+    "slug": "delta",
+    "categorySlug": "development",
+    "url": "https://dandavison.github.io/delta/",
+    "tagline": "Read Git diffs with syntax highlighting and side-by-side views",
+    "description": "delta is a terminal pager for Git diffs, blame output, and supported search results. Add syntax highlighting, navigate between change sections, and choose side-by-side layouts when reviewing code. The MIT-licensed program integrates with Git and is distributed for macOS, Linux, and Windows; it does not provide repository hosting.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "git",
+      "code-review",
+      "diff",
+      "terminal"
+    ],
+    "useCases": [
+      "Review Git changes with syntax highlighting",
+      "Compare old and new code side by side",
+      "Navigate large diffs and blame output in the terminal"
+    ],
+    "github": "https://github.com/dandavison/delta",
+    "repositoryId": "193526915",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 32632,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-10-28T02:45:33Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/dandavison/delta",
+      "https://github.com/dandavison/delta/blob/main/README.md",
+      "https://github.com/dandavison/delta/blob/main/LICENSE",
+      "https://dandavison.github.io/delta/",
+      "https://dandavison.github.io/delta/installation.html"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "Official installation documentation provides Linux/macOS/Windows binaries and package-manager instructions.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-28T02:45:33Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "38324fcbc257807ac4ccc0c7a9e58dd4e3e7cc82",
+        "licensePath": "LICENSE",
+        "licenseSha": "e7f636f4bc9b9ba0040daa289af4a5f1eddb9449"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Difftastic",
+    "slug": "difftastic",
+    "categorySlug": "development",
+    "url": "https://difftastic.wilfred.me.uk/",
+    "tagline": "Compare code changes using language syntax",
+    "description": "Difftastic compares source files using their syntax rather than only matching lines. It highlights changed expressions and can make code reviews easier to read after formatting or indentation changes. The MIT-licensed command-line tool integrates with Git and has Windows, macOS, and Linux builds; bundled parsers retain their own notices.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "diff",
+      "code-review",
+      "git",
+      "cli"
+    ],
+    "useCases": [
+      "Compare source files using syntax-aware differences",
+      "Review changes after code has been reformatted",
+      "Use structural comparisons from Git workflows"
+    ],
+    "github": "https://github.com/Wilfred/difftastic",
+    "repositoryId": "162276894",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 26129,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-02T00:02:38Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/Wilfred/difftastic",
+      "https://github.com/Wilfred/difftastic/blob/master/README.md",
+      "https://github.com/Wilfred/difftastic/blob/master/LICENSE",
+      "https://difftastic.wilfred.me.uk/",
+      "https://difftastic.wilfred.me.uk/installation.html"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "The linked official manual lists prebuilt Windows/macOS/Linux binaries and package managers.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T00:02:38Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "86385eaa73cd7068689572bcae9e63e36895fa6a",
+        "licensePath": "LICENSE",
+        "licenseSha": "80b96e3da8e92b8e6d2ad8b2fbf1fd9baecd73d8"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "fq",
+    "slug": "fq",
+    "categorySlug": "development",
+    "url": "https://wader.github.io/fq/",
+    "tagline": "Inspect and query binary files with a jq-style command line",
+    "description": "fq helps inspect binary formats using a structural hex viewer, format decoders, and jq-style expressions. Explore nested file structures, extract selected fields or byte ranges, and experiment in an interactive REPL. The application is MIT licensed and offers prebuilt releases for macOS, Linux, and Windows; it runs locally on files you provide.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "binary-analysis",
+      "cli",
+      "developer-tools",
+      "data-inspection"
+    ],
+    "useCases": [
+      "Explore the structure of supported binary formats",
+      "Extract fields and byte ranges with jq-style queries",
+      "Investigate files interactively with a hex viewer"
+    ],
+    "github": "https://github.com/wader/fq",
+    "repositoryId": "336895436",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 10624,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-10-31T16:32:36Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/wader/fq",
+      "https://github.com/wader/fq/blob/master/README.md",
+      "https://github.com/wader/fq/blob/master/LICENSE",
+      "https://wader.github.io/fq/"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README links prebuilt releases for macOS/Linux/Windows and Homebrew, Scoop, and Linux package options.",
+      "license": "GitHub returned NOASSERTION, but the full LICENSE file is standard MIT with attribution notices; verified directly.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-31T16:32:36Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "38e3b6e6bb7639470af96252327708a80a686ebf",
+        "licensePath": "LICENSE",
+        "licenseSha": "40b221526bc41c14586a2934e3f5d3f27a76b21e"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "mise",
+    "slug": "mise",
+    "categorySlug": "development",
+    "url": "https://mise.jdx.dev",
+    "tagline": "Manage development tools, environment variables, and project tasks",
+    "description": "mise combines a development-tool version manager, environment configuration, and task runner in one command-line application. Declare the tools a project uses, install them consistently, and run shared tasks from configuration files. The MIT-licensed application supports macOS, Linux, and Windows; third-party tools and services retain their own licenses and charges.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "developer-tools",
+      "version-manager",
+      "task-runner",
+      "cli"
+    ],
+    "useCases": [
+      "Keep project tool versions consistent across machines",
+      "Load environment variables for a project",
+      "Run shared development tasks from configuration"
+    ],
+    "github": "https://github.com/jdx/mise",
+    "repositoryId": "586920414",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 35654,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-02T10:19:28Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/jdx/mise",
+      "https://github.com/jdx/mise/blob/main/README.md",
+      "https://github.com/jdx/mise/blob/main/LICENSE",
+      "https://mise.jdx.dev",
+      "https://mise.jdx.dev/installing-mise.html"
+    ],
+    "legacyUrls": [
+      "https://github.com/jdx/rtx"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README documents a macOS/Linux installer and Windows WinGet, plus other package managers.",
+      "license": "Official LICENSE text matches MIT; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T10:19:28Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "7e06414ce8c785d472c91e9647d92160512f3ed6",
+        "licensePath": "LICENSE",
+        "licenseSha": "5333824e7fed856d37c22a975e3b323b8bbdf1f7"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Dufs",
+    "slug": "dufs",
+    "categorySlug": "file-management",
+    "tagline": "Serve and manage files through a browser or WebDAV",
+    "description": "Dufs is a small file server with a web interface for downloading, uploading, searching, and editing files. Configure access rules, HTTPS, resumable transfers, or WebDAV for a shared directory. It provides binaries for Windows, macOS, and Linux and can run in a container. The project offers Apache-2.0 or MIT licensing; server hosting remains your responsibility.",
+    "platforms": [
+      "Web",
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "file-sharing",
+      "webdav",
+      "self-hosted",
+      "file-server"
+    ],
+    "useCases": [
+      "Share a directory through a browser-based file server",
+      "Upload and resume file transfers to your own server",
+      "Access a file collection through WebDAV clients"
+    ],
+    "url": "https://github.com/sigoden/dufs",
+    "github": "https://github.com/sigoden/dufs",
+    "repositoryId": "496605552",
+    "licenseSpdxId": "Apache-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 11018,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-10-30T08:51:08Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/sigoden/dufs",
+      "https://github.com/sigoden/dufs/blob/main/README.md",
+      "https://github.com/sigoden/dufs/blob/main/LICENSE-APACHE"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README documents Cargo, Docker, Homebrew and downloadable macOS/Linux/Windows binaries.",
+      "license": "The Apache-2.0 license text in LICENSE-APACHE was inspected; repository also offers MIT as an alternative.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-30T08:51:08Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "f913336bfd91e42642ebfa65f67311cec4049534",
+        "licensePath": "LICENSE-APACHE",
+        "licenseSha": "6cc4ebeed658d479a9c411206b248ade9a2541d9"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "dupeGuru",
+    "slug": "dupeguru",
+    "categorySlug": "file-management",
+    "tagline": "Find duplicate files with a desktop comparison workflow",
+    "description": "dupeGuru scans local folders for duplicate files and presents results in a desktop interface for review. Its standard, music, and picture modes help compare different file collections before cleanup. The GPL-3.0 source supports Linux, Windows, and macOS. The project continues to receive maintenance commits, while its README asks for help with platform packaging and documentation.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "duplicate-files",
+      "disk-cleanup",
+      "desktop",
+      "file-management"
+    ],
+    "useCases": [
+      "Review duplicate files across local folders",
+      "Compare a music collection using its dedicated scan mode",
+      "Find similar pictures before cleaning up a library"
+    ],
+    "url": "https://dupeguru.voltaicideas.net",
+    "github": "https://github.com/arsenetar/dupeguru",
+    "repositoryId": "10856340",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 7942,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-09-07T16:29:13Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/arsenetar/dupeguru",
+      "https://github.com/arsenetar/dupeguru/blob/master/README.md",
+      "https://github.com/arsenetar/dupeguru/blob/master/LICENSE",
+      "https://dupeguru.voltaicideas.net",
+      "https://github.com/arsenetar/dupeguru/blob/master/help/en/scan.rst"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README provides Python/PyQt source build instructions and platform-specific Windows/macOS build guides; linked help documents scan modes.",
+      "license": "Official GPL-3.0 license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintenance": "Repository received recent maintenance commits; README requests help with platform maintenance, packaging and documentation. No rapid-release claim is made.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-09-07T16:29:13Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "f574dee055923262cdc83782248340ab5f48a362",
+        "licensePath": "LICENSE",
+        "licenseSha": "94a045322262546cfb9d72561e1d587b5c2ffb1e",
+        "scanDocumentationPath": "help/en/scan.rst",
+        "scanDocumentationSha": "fc9dc7e4b6690bb01dfc6e7bf756eb8f60ac7969"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Krokiet",
+    "slug": "krokiet",
+    "categorySlug": "file-management",
+    "url": "https://github.com/qarmin/czkawka",
+    "tagline": "Find duplicate and unnecessary files with Czkawka’s current desktop UI",
+    "description": "Krokiet is the current desktop frontend for Czkawka's file-cleanup tools. Scan for duplicates, empty files and folders, large files, similar media, or broken links, then review the results locally. Its GPL-3.0-only application supports Windows, macOS, and Linux. The shared source includes MIT-licensed components; similar-video features require FFmpeg. The older Czkawka GTK frontend is no longer released.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "duplicate-files",
+      "disk-cleanup",
+      "desktop",
+      "file-management"
+    ],
+    "useCases": [
+      "Find duplicate files and similar media in local folders",
+      "Locate large files and empty directories for review",
+      "Inspect broken links and other unnecessary files before cleanup"
+    ],
+    "github": "https://github.com/qarmin/czkawka",
+    "repositoryId": "292065578",
+    "licenseSpdxId": "GPL-3.0-only",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 34757,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-11-01T22:28:04Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/qarmin/czkawka",
+      "https://github.com/qarmin/czkawka/blob/master/README.md",
+      "https://github.com/qarmin/czkawka/blob/master/LICENSE_CC_BY_4_ICONS",
+      "https://github.com/qarmin/czkawka/blob/master/krokiet/README.md",
+      "https://github.com/qarmin/czkawka/blob/master/krokiet/Cargo.toml",
+      "https://github.com/qarmin/czkawka/blob/master/LICENSE_MIT_EVERYTHING_OUTSIDE_ANY_CARGO_APP_LIBRARY"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "krokiet/README.md documents Windows/macOS/Linux binaries, Cargo installation and optional FFmpeg requirements.",
+      "license": "krokiet/Cargo.toml explicitly declares GPL-3.0-only; krokiet/README.md explains that the full application is GPL-3.0 due to Slint while source components are MIT. Root README identifies Krokiet as the current frontend and legacy GTK as no longer released.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T22:28:04Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "898345bdb4c8709b2e39afe2b377313c7b252f86",
+        "licensePath": "krokiet/Cargo.toml",
+        "licenseSha": "8d586904f0d19d558ff3ce6ebff9e973f05bd24d",
+        "applicationReadmePath": "krokiet/README.md",
+        "applicationReadmeSha": "f8499867ee55d13f7b16a924b0f65dcbb5b09c60"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "ComfyUI",
+    "slug": "comfyui",
+    "categorySlug": "image-media",
+    "url": "https://www.comfy.org/",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "ai-image-generation",
+      "node-editor",
+      "creative-workflows",
+      "local-ai"
+    ],
+    "tagline": "Build reusable AI media workflows with a visual node graph",
+    "description": "ComfyUI is a visual application for constructing and running AI image, video, audio, and other media workflows. Connect model-loading, generation, editing, and processing nodes, save the graph, and reuse its settings for later work. The GPL-3.0 application runs locally on supported hardware; model licenses, optional paid API nodes, and the hosted cloud service have separate terms and costs.",
+    "useCases": [
+      "Build and reuse a node-based image generation workflow",
+      "Refine images with masking, inpainting, and upscaling nodes",
+      "Save generation graphs and settings for repeatable production"
+    ],
+    "legacyUrls": [
+      "https://github.com/comfyanonymous/ComfyUI"
+    ],
+    "github": "https://github.com/Comfy-Org/ComfyUI",
+    "repositoryId": "589831718",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 144577,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.057Z",
+    "pushedAt": "2026-11-02T06:18:14Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/Comfy-Org/ComfyUI",
+      "https://github.com/Comfy-Org/ComfyUI/blob/master/README.md",
+      "https://github.com/Comfy-Org/ComfyUI/blob/master/LICENSE",
+      "https://www.comfy.org/",
+      "https://github.com/comfyanonymous/ComfyUI"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README documents Windows/macOS desktop downloads and manual Windows/Linux/macOS installation. No upstream installers were run.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T06:18:14Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "b4621ab134fe4a21f1183daf19f79d3e11595502",
+        "licensePath": "LICENSE",
+        "licenseSha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "InvokeAI",
+    "slug": "invokeai",
+    "categorySlug": "image-media",
+    "url": "https://invoke-ai.github.io/InvokeAI/",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "ai-image-generation",
+      "inpainting",
+      "creative-workflows",
+      "self-hosted"
+    ],
+    "tagline": "Generate and refine images with a canvas and reusable workflows",
+    "description": "InvokeAI is a locally hosted web application for AI-assisted image creation. Its canvas combines generation, inpainting, outpainting, and brush tools, while node workflows and an organized gallery support repeatable creative work. The application is Apache-2.0 licensed. Compatible hardware and models are required; model licensing, external model APIs, and commercial Invoke services are separate.",
+    "useCases": [
+      "Refine a generated image on an integrated canvas",
+      "Create and share a reusable node-based generation workflow",
+      "Organize generated images and recall their prompts and settings"
+    ],
+    "github": "https://github.com/invoke-ai/InvokeAI",
+    "repositoryId": "525592995",
+    "licenseSpdxId": "Apache-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 28955,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.062Z",
+    "pushedAt": "2026-11-02T10:17:13Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/invoke-ai/InvokeAI",
+      "https://github.com/invoke-ai/InvokeAI/blob/main/README.md",
+      "https://github.com/invoke-ai/InvokeAI/blob/main/LICENSE",
+      "https://invoke-ai.github.io/InvokeAI/"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README links the official launcher and installation documentation; the selected platform is the documented locally hosted web UI.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T10:17:13Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "e2be719059bcdefc8ab031f621954682371a6bf6",
+        "licensePath": "LICENSE",
+        "licenseSha": "fac28ea6b9eaf841ce1ed073647deca53c5c1290"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Meshroom",
+    "slug": "meshroom",
+    "categorySlug": "image-media",
+    "url": "https://meshroom.org/",
+    "platforms": [
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "photogrammetry",
+      "3d-reconstruction",
+      "node-editor",
+      "computer-vision"
+    ],
+    "tagline": "Build 3D reconstruction pipelines from photographs",
+    "description": "Meshroom is a visual application for building and running image-processing and 3D reconstruction pipelines. Its node graph, cached intermediate results, and bundled AliceVision integration support workflows that turn sets of photographs into 3D geometry. Meshroom is MPL-2.0 licensed; bundled plugins and dependencies retain their own notices. Available reconstruction nodes can require additional compatible software and hardware.",
+    "useCases": [
+      "Reconstruct a 3D subject from a set of photographs",
+      "Inspect and adjust a node-based photogrammetry pipeline",
+      "Reuse cached processing results while refining a reconstruction"
+    ],
+    "github": "https://github.com/alicevision/Meshroom",
+    "repositoryId": "34405381",
+    "licenseSpdxId": "MPL-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 13060,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.069Z",
+    "pushedAt": "2026-11-02T10:03:36Z",
+    "defaultBranch": "develop",
+    "sources": [
+      "https://github.com/alicevision/Meshroom",
+      "https://github.com/alicevision/Meshroom/blob/develop/README.md",
+      "https://github.com/alicevision/Meshroom/blob/develop/COPYING.md",
+      "https://github.com/alicevision/Meshroom/blob/develop/LICENSE-MPL2.md",
+      "https://meshroom.org/",
+      "https://github.com/alicevision/Meshroom/blob/develop/INSTALL.md"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "Official INSTALL.md documents Windows and Linux prebuilt releases and dependency setup. macOS source instructions are not presented as equivalent packaged support.",
+      "license": "GitHub returns NOASSERTION for COPYING.md, which explicitly assigns Meshroom MPL2; LICENSE-MPL2.md contains the full standard MPL-2.0 text. Both were reviewed.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T10:03:36Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "f639012294c43ae63d0d31f24e83c0d32dec95cc",
+        "licensePath": "LICENSE-MPL2.md",
+        "licenseSha": "14e2f777f6c395e7e04ab4aa306bbcc4b0c1120e"
+      },
+      "baselineMatches": [],
+      "httpsVerified": {
+        "url": "https://meshroom.org/",
+        "status": 200,
+        "title": "Meshroom &#8211; Node-based Visual Programming Toolbox",
+        "checkedAt": "2026-11-02T10:25:37.465Z"
+      }
+    }
+  },
+  {
+    "name": "Deskflow",
+    "slug": "deskflow",
+    "categorySlug": "productivity",
+    "tagline": "Share a keyboard and mouse across nearby computers",
+    "description": "Deskflow lets one computer's keyboard, mouse, or trackpad control nearby computers and share clipboard content. It supports Windows, macOS, Linux, and FreeBSD, with TLS enabled by default and documented Wayland requirements. The application is GPL-2.0 licensed with an OpenSSL exception; each controlled computer runs its own client or server.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "keyboard-sharing",
+      "mouse-sharing",
+      "desktop",
+      "clipboard"
+    ],
+    "useCases": [
+      "Use one keyboard and mouse across a multi-computer desk",
+      "Share clipboard content between connected computers",
+      "Move between Windows, macOS, and Linux workstations"
+    ],
+    "url": "https://deskflow.org",
+    "github": "https://github.com/deskflow/deskflow",
+    "repositoryId": "25135037",
+    "licenseSpdxId": "GPL-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 30474,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-11-01T12:56:01Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/deskflow/deskflow",
+      "https://github.com/deskflow/deskflow/blob/master/.github/README.md",
+      "https://github.com/deskflow/deskflow/blob/master/LICENSE",
+      "https://deskflow.org"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README links release packages, Homebrew, Flatpak, distribution packages and a build guide.",
+      "license": "Official GPL-2.0 LICENSE reviewed; README documents an OpenSSL exception. FreeBSD is documented but omitted from normalized platform filters.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T12:56:01Z"
+      },
+      "evidence": {
+        "readmePath": ".github/README.md",
+        "readmeSha": "667ed74b914cacf6df3d93298aaae0fb98572908",
+        "licensePath": "LICENSE",
+        "licenseSha": "d8cf7d463e2a4f064a157fa994bb394d3623b9cc"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Floccus",
+    "slug": "floccus",
+    "categorySlug": "productivity",
+    "url": "https://floccus.org/",
+    "tagline": "Sync browser bookmarks through storage you choose",
+    "description": "Floccus synchronizes native browser bookmarks across supported browsers and devices using services such as WebDAV, Nextcloud, Git, Google Drive, or Dropbox. Configure separate profiles, folders, and sync directions, then access saved links from its mobile apps. The extension and apps are MPL-2.0 licensed; storage services or hosting may have separate costs.",
+    "platforms": [
+      "Web",
+      "Android",
+      "iOS"
+    ],
+    "tags": [
+      "bookmarks",
+      "browser-extension",
+      "sync",
+      "self-hosted"
+    ],
+    "useCases": [
+      "Keep bookmarks consistent across supported browsers",
+      "Sync a selected bookmark folder through WebDAV or Git",
+      "Access synced bookmarks from Android or iOS"
+    ],
+    "legacyUrls": [
+      "https://github.com/marcelklehr/floccus"
+    ],
+    "github": "https://github.com/floccusaddon/floccus",
+    "repositoryId": "60434915",
+    "licenseSpdxId": "MPL-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 8614,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-11-01T15:55:23Z",
+    "defaultBranch": "develop",
+    "sources": [
+      "https://github.com/floccusaddon/floccus",
+      "https://github.com/floccusaddon/floccus/blob/develop/README.md",
+      "https://github.com/floccusaddon/floccus/blob/develop/LICENSE.txt",
+      "https://floccus.org",
+      "https://floccus.org/"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README links official browser extension and Android/iOS downloads and setup guides.",
+      "license": "Official MPL-2.0 license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T15:55:23Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "f54f398002f21332516f42f538a4129a3c8f2eb3",
+        "licensePath": "LICENSE.txt",
+        "licenseSha": "3c75498d72c2040402ebc082bc771410dc146cae"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Heimer",
+    "slug": "heimer",
+    "categorySlug": "productivity",
+    "tagline": "Draw mind maps and export them as images or SVG",
+    "description": "Heimer is a desktop mind-mapping tool for connecting ideas with labeled nodes and edges. It offers an adjustable grid, automatic layout optimization, undo/redo, autosave, and PNG or SVG export. The GPL-3.0 application targets Linux and Windows, with prebuilt packages and source-build instructions available from its repository.",
+    "platforms": [
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "mind-mapping",
+      "diagrams",
+      "desktop",
+      "brainstorming"
+    ],
+    "useCases": [
+      "Map connected ideas during a brainstorming session",
+      "Label relationships between project requirements",
+      "Export a mind map as PNG or SVG for a document"
+    ],
+    "url": "https://github.com/juzzlin/Heimer",
+    "github": "https://github.com/juzzlin/Heimer",
+    "repositoryId": "122540847",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 984,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-02-10T06:02:15Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/juzzlin/Heimer",
+      "https://github.com/juzzlin/Heimer/blob/master/README.md",
+      "https://github.com/juzzlin/Heimer/blob/master/COPYING"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README documents Linux Snap/Deb/AppImage and Windows installer or ZIP packages.",
+      "license": "Official GPL-3.0 license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-02-10T06:02:15Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "bc693f24308e0a69faf5c032ebc79632cbf0c9c5",
+        "licensePath": "COPYING",
+        "licenseSha": "94a9ed024d3859793618152ea559a168bbcbb5e2"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Kando",
+    "slug": "kando",
+    "categorySlug": "productivity",
+    "tagline": "Launch desktop actions from configurable pie menus",
+    "description": "Kando provides customizable pie menus for launching applications, opening files, and triggering keyboard shortcuts. Use mouse, pen, touch, controller, or keyboard input to choose actions. It runs on Windows, macOS, and Linux, with some Linux desktops requiring additional configuration. The application source is MIT licensed; documentation and assets have their own notices.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "app-launcher",
+      "desktop",
+      "shortcuts",
+      "pie-menu"
+    ],
+    "useCases": [
+      "Launch frequently used applications from a pie menu",
+      "Group keyboard shortcuts into visual menus",
+      "Open files and commands with mouse or pen gestures"
+    ],
+    "url": "https://kando.menu",
+    "github": "https://github.com/kando-menu/kando",
+    "repositoryId": "628600520",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 6566,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-11-02T05:06:32Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/kando-menu/kando",
+      "https://github.com/kando-menu/kando/blob/main/README.md",
+      "https://github.com/kando-menu/kando/blob/main/LICENSE.md",
+      "https://github.com/kando-menu/kando/blob/main/LICENSES/MIT.txt",
+      "https://kando.menu"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README links platform-specific Windows/macOS/Linux installation guides and source build instructions.",
+      "license": "LICENSE.md explicitly states that application source is MIT licensed; LICENSES/MIT.txt contains the license text. Documentation and assets use separate REUSE notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T05:06:32Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "1fa18b5f2b463b861fffd33a9cba0e0a72cf5148",
+        "licensePath": "LICENSES/MIT.txt",
+        "licenseSha": "2071b23b0e08594ea6bc99ac71129ef992abf498"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Linkora",
+    "slug": "linkora",
+    "categorySlug": "productivity",
+    "url": "https://linkora-app.netlify.app/",
+    "tagline": "Organize links and save webpages with optional self-hosted sync",
+    "description": "Linkora organizes saved links in nested folders with tags, search, import/export, and local backups. It can save webpages as standalone HTML and optionally sync collections through a self-hosted server. The MIT-licensed project provides Android, desktop, and web implementations; operating a sync server and database can add hosting costs.",
+    "platforms": [
+      "Android",
+      "Windows",
+      "Linux",
+      "Web"
+    ],
+    "tags": [
+      "bookmarks",
+      "offline-reading",
+      "self-hosted",
+      "sync"
+    ],
+    "useCases": [
+      "Organize saved links in nested folders and tags",
+      "Save webpages as standalone HTML for later access",
+      "Sync a bookmark collection through your own server"
+    ],
+    "legacyUrls": [
+      "https://github.com/sakethpathike/Linkora"
+    ],
+    "github": "https://github.com/LinkoraApp/Linkora",
+    "repositoryId": "648784316",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 947,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-11-02T10:11:43Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/LinkoraApp/Linkora",
+      "https://github.com/LinkoraApp/Linkora/blob/master/README.md",
+      "https://github.com/LinkoraApp/Linkora/blob/master/LICENSE",
+      "https://github.com/LinkoraApp/Linkora/blob/master/docs/ServerConnectionSetup.md",
+      "https://github.com/LinkoraApp/Linkora/blob/master/DEVELOPMENT.md",
+      "https://linkora-app.netlify.app/",
+      "https://github.com/LinkoraApp/Linkora/releases/tag/release-v0.22.0"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README links Android releases, F-Droid, Google Play and Arch Linux packaging; DEVELOPMENT.md documents Android, desktop and Web/Wasm entry points. The latest stable release includes Android APK, Windows EXE/MSI, Linux AppImage/DEB/ZIP and Web/Wasm ZIP assets.",
+      "license": "Official MIT license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T10:11:43Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "529ec49d1d641e4d21942e0059c72d0a6402a967",
+        "licensePath": "LICENSE",
+        "licenseSha": "3ebed67b95cb0ba9882cd2c62a11d8f1862e3db2"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Sol",
+    "slug": "sol",
+    "categorySlug": "productivity",
+    "url": "https://sol.ospfranco.com/",
+    "tagline": "Launch Mac apps and everyday actions from one command interface",
+    "description": "Sol is a macOS launcher with application search, custom shortcuts, clipboard history, a notes scratchpad, and a window manager. It also exposes small actions such as formatting JSON, inserting emoji, and running scripts. The MIT-licensed app runs locally on supported Macs and can be installed with Homebrew or downloaded from the repository.",
+    "platforms": [
+      "Mac"
+    ],
+    "tags": [
+      "app-launcher",
+      "macos",
+      "clipboard",
+      "shortcuts"
+    ],
+    "useCases": [
+      "Find and launch installed Mac applications",
+      "Reuse clipboard entries and quick notes",
+      "Run custom shortcuts and desktop actions from one interface"
+    ],
+    "github": "https://github.com/ospfranco/sol",
+    "repositoryId": "448648008",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 3193,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-11-01T23:28:06Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/ospfranco/sol",
+      "https://github.com/ospfranco/sol/blob/main/README.md",
+      "https://github.com/ospfranco/sol/blob/main/LICENSE",
+      "https://sol.ospfranco.com/"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README documents Homebrew cask installation and manual downloads; explicitly states a macOS minimum version.",
+      "license": "Official MIT license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T23:28:06Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "6a16279093ad4129994087814b68b3e484d5f539",
+        "licensePath": "LICENSE",
+        "licenseSha": "29323130c7396fbf85abc03ad7834da4afe52d5f"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "wnr",
+    "slug": "wnr",
+    "categorySlug": "productivity",
+    "tagline": "Use a desktop timer for focused work and time management",
+    "description": "wnr is a desktop timer and time-management application with an extensible Electron-based implementation. Use it to time focused tasks and build a regular work-session routine. The MPL-2.0 project provides Windows and macOS downloads, with Linux build targets documented in the repository. It is a local application rather than a hosted time-tracking service.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "timer",
+      "focus",
+      "time-management",
+      "desktop"
+    ],
+    "useCases": [
+      "Time an individual focused task",
+      "Use a desktop countdown during a work session",
+      "Build a repeatable routine around timed work"
+    ],
+    "url": "https://getwnr.com/",
+    "github": "https://github.com/RoderickQiu/wnr",
+    "repositoryId": "166923771",
+    "licenseSpdxId": "MPL-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 1101,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-10-20T08:50:36Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/RoderickQiu/wnr",
+      "https://github.com/RoderickQiu/wnr/blob/master/README.md",
+      "https://github.com/RoderickQiu/wnr/blob/master/LICENSE",
+      "https://github.com/RoderickQiu/wnr/blob/master/README.zh-CN.md",
+      "https://getwnr.com/"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "English README links Windows/macOS releases and documents Linux/AppImage build commands; Chinese README lists Windows/macOS/Linux downloads.",
+      "license": "Official MPL-2.0 license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-20T08:50:36Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "0cdbf513b1c2797d156a47ac4d989683dfa69651",
+        "licensePath": "LICENSE",
+        "licenseSha": "a612ad9813b006ce81d1ee438dd784da99a54007"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Tinyauth",
+    "slug": "tinyauth",
+    "categorySlug": "security-privacy",
+    "url": "https://tinyauth.app",
+    "tagline": "Add sign-in and access controls to self-hosted applications",
+    "description": "Tinyauth is a self-hosted authentication and authorization server that can work with reverse proxies including Traefik, Nginx, and Caddy. It supports account sign-in, external authentication providers, and access-control rules for protected applications. The AGPL-3.0 application is under active development; hosting and external identity services may have separate costs.",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "self-hosted",
+      "authentication",
+      "access-control",
+      "reverse-proxy"
+    ],
+    "useCases": [
+      "Protect applications behind a reverse proxy",
+      "Connect supported external authentication providers",
+      "Apply access rules to self-hosted services"
+    ],
+    "github": "https://github.com/tinyauthapp/tinyauth",
+    "repositoryId": "918974884",
+    "licenseSpdxId": "AGPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 8453,
+    "githubStarsObservedAt": "2026-11-02T10:23:29.581Z",
+    "pushedAt": "2026-11-02T08:29:31Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/tinyauthapp/tinyauth",
+      "https://github.com/tinyauthapp/tinyauth/blob/main/README.md",
+      "https://github.com/tinyauthapp/tinyauth/blob/main/LICENSE",
+      "https://tinyauth.app",
+      "https://tinyauth.app/docs/getting-started"
+    ],
+    "legacyUrls": [
+      "https://github.com/steveiliop56/tinyauth"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text and linked installation documentation reviewed. Applications were not installed or executed.",
+      "installation": "README links the official getting-started guide and provides a Docker Compose example.",
+      "license": "Official LICENSE text matches AGPL-3.0; bundled dependencies may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T08:29:31Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "471617889199fb05fed1d6909e21f16b7eb9abe5",
+        "licensePath": "LICENSE",
+        "licenseSha": "be3f7b28e564e7dd05eaf59d64adba1a4065ac0e"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Ackee",
+    "slug": "ackee",
+    "categorySlug": "seo-marketing",
+    "url": "https://ackee.electerious.com",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "web-analytics",
+      "self-hosted",
+      "event-tracking",
+      "website-metrics"
+    ],
+    "tagline": "Monitor website traffic and events on your own server",
+    "description": "Ackee is a self-hosted web analytics application with a focused dashboard for website traffic and custom events. Run its Node.js and MongoDB service, add the tracking script to your sites, and query collected statistics through its GraphQL API. The application is MIT licensed. Hosting, database operations, and any supporting infrastructure remain the operator's responsibility.",
+    "useCases": [
+      "Monitor traffic across websites in one dashboard",
+      "Track events such as button clicks and newsletter signups",
+      "Query website statistics through a GraphQL API"
+    ],
+    "github": "https://github.com/electerious/Ackee",
+    "repositoryId": "18831920",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 4723,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.077Z",
+    "pushedAt": "2026-10-23T16:20:01Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/electerious/Ackee",
+      "https://github.com/electerious/Ackee/blob/master/README.md",
+      "https://github.com/electerious/Ackee/blob/master/LICENSE",
+      "https://ackee.electerious.com"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README links Docker Compose, Docker, Helm and manual deployment instructions.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-23T16:20:01Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "fb604c47aa21c0b0950673b6be648dbae7533f92",
+        "licensePath": "LICENSE",
+        "licenseSha": "3529c5695604d91510a1106182527a059aea0b54"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "BillionMail",
+    "slug": "billionmail",
+    "categorySlug": "seo-marketing",
+    "url": "https://www.billionmail.com/",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "email-marketing",
+      "newsletters",
+      "mail-server",
+      "self-hosted"
+    ],
+    "tagline": "Run email campaigns and mailing infrastructure on your own server",
+    "description": "BillionMail is a self-hosted mail-server and email-marketing application with contact management, campaign templates, and delivery and engagement reporting. Deploy it on your own server, configure a sending domain, and manage newsletters and other email campaigns through its web interface. The code is AGPL-3.0 licensed. Server costs, DNS setup, mail operations, and delivery reputation management are separate responsibilities.",
+    "useCases": [
+      "Manage contact lists and reusable campaign templates",
+      "Send a newsletter from infrastructure you operate",
+      "Review campaign delivery and engagement reports"
+    ],
+    "legacyUrls": [
+      "https://github.com/aaPanel/BillionMail"
+    ],
+    "github": "https://github.com/Billionmail/BillionMail",
+    "repositoryId": "932580333",
+    "licenseSpdxId": "AGPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 16157,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.083Z",
+    "pushedAt": "2026-06-11T06:44:04Z",
+    "defaultBranch": "dev",
+    "sources": [
+      "https://github.com/Billionmail/BillionMail",
+      "https://github.com/Billionmail/BillionMail/blob/dev/README.md",
+      "https://github.com/Billionmail/BillionMail/blob/dev/LICENSE",
+      "https://www.billionmail.com/",
+      "https://github.com/aaPanel/BillionMail"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README documents a server installation script and Docker Compose. No script was executed; no throughput, inbox placement, or unlimited-delivery claim is copied.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-06-11T06:44:04Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "9a5c51f944d653504a76f4e53852786d8badd5d5",
+        "licensePath": "LICENSE",
+        "licenseSha": "bae94e189e62df1b8d5bd11435d954b25bee9d7b"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Shynet",
+    "slug": "shynet",
+    "categorySlug": "seo-marketing",
+    "url": "https://github.com/milesmcc/shynet",
+    "platforms": [
+      "Web"
+    ],
+    "tags": [
+      "web-analytics",
+      "self-hosted",
+      "website-metrics",
+      "cookie-free"
+    ],
+    "tagline": "Measure website traffic with a self-hosted analytics dashboard",
+    "description": "Shynet is a self-hosted web analytics application for collecting website hits and sessions without cookies. Its dashboard organizes services and shows traffic sources, page activity, device information, and other aggregate metrics. The Apache-2.0 application supports container-based deployment. You operate and pay for its hosting and storage, and decide how to configure data collection for your sites.",
+    "useCases": [
+      "Monitor traffic across several services or websites",
+      "Review page activity, referrers, and visitor device metrics",
+      "Host website measurement data on infrastructure you control"
+    ],
+    "github": "https://github.com/milesmcc/shynet",
+    "repositoryId": "254441446",
+    "licenseSpdxId": "Apache-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 3157,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.086Z",
+    "pushedAt": "2026-03-15T23:00:29Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/milesmcc/shynet",
+      "https://github.com/milesmcc/shynet/blob/master/README.md",
+      "https://github.com/milesmcc/shynet/blob/master/LICENSE"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README links GUIDE.md and documents Docker, Docker Compose, Heroku and Kubernetes routes. Last observed repository push was March 2026; no claim of a recent release is made.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-03-15T23:00:29Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "1cc0954509a3cbd94dd167d874dbf51d0bb525d0",
+        "licensePath": "LICENSE",
+        "licenseSha": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Ksnip",
+    "slug": "ksnip",
+    "categorySlug": "utilities",
+    "tagline": "Capture screenshots and annotate them on the desktop",
+    "description": "Ksnip captures screens, windows, and selected areas, then adds text, arrows, shapes, effects, or watermarks. It also opens existing images and can blur or pixelate selected regions. The GPL-3.0 application runs on Windows, macOS, and Linux; capture options vary by desktop environment. The maintainer is seeking additional help while continuing review and support.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "screenshots",
+      "annotations",
+      "desktop",
+      "image-tools"
+    ],
+    "useCases": [
+      "Capture a window or selected screen region",
+      "Annotate screenshots for instructions or bug reports",
+      "Blur or pixelate selected regions before sharing an image"
+    ],
+    "url": "https://github.com/ksnip/ksnip",
+    "github": "https://github.com/ksnip/ksnip",
+    "repositoryId": "64607359",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 3370,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-10-21T10:17:13Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/ksnip/ksnip",
+      "https://github.com/ksnip/ksnip/blob/master/README.md",
+      "https://github.com/ksnip/ksnip/blob/master/LICENSE.txt"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README documents Linux packages and AppImage, Windows EXE, and macOS DMG release binaries.",
+      "license": "Official GPL-3.0 license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintenance": "README requests co-maintainers and states the existing maintainer remains available for guidance, reviews and support.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-21T10:17:13Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "44f0ae888d36210e90d969a6054b45b70bda6268",
+        "licensePath": "LICENSE.txt",
+        "licenseSha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Beutl",
+    "slug": "beutl",
+    "categorySlug": "video-audio",
+    "url": "https://beutl.beditor.net/en",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "video-editing",
+      "motion-graphics",
+      "compositing",
+      "node-editor"
+    ],
+    "tagline": "Combine video, graphics, text, and audio in a desktop compositor",
+    "description": "Beutl is a desktop video-editing and compositing application for Windows, macOS, and Linux. Arrange media on a timeline, animate properties with keyframes, build node graphs, and combine effects, text, shapes, and audio. The main application is MIT licensed. Its separate FFmpeg worker is GPL-3.0 licensed, and bundled components or extensions may have their own licenses.",
+    "useCases": [
+      "Edit and composite media on a multitrack timeline",
+      "Animate text and shapes with keyframes and easing",
+      "Create reusable effects with nodes and supported shaders"
+    ],
+    "github": "https://github.com/b-editor/beutl",
+    "repositoryId": "307580320",
+    "licenseSpdxId": "MIT",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 1249,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.092Z",
+    "pushedAt": "2026-11-02T10:20:30Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/b-editor/beutl",
+      "https://github.com/b-editor/beutl/blob/main/README.md",
+      "https://github.com/b-editor/beutl/blob/main/LICENSE",
+      "https://beutl.beditor.net/en",
+      "https://github.com/b-editor/beutl/blob/main/LICENSE.GPL"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README explicitly lists Windows/macOS/Linux and links downloads, the installation guide, and GitHub Releases.",
+      "license": "Main LICENSE is MIT; README identifies the independent Beutl.FFmpegWorker under LICENSE.GPL. Both license files were reviewed.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T10:20:30Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "54777f88d06ef7a6c596c4ac0516f10a4cf8157d",
+        "licensePath": "LICENSE",
+        "licenseSha": "b64d9722e03a8dbfd824dc9079b81a2741bd5237"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Flowblade",
+    "slug": "flowblade",
+    "categorySlug": "video-audio",
+    "url": "https://jliljebl.github.io/flowblade/",
+    "platforms": [
+      "Linux"
+    ],
+    "tags": [
+      "video-editing",
+      "timeline",
+      "compositing",
+      "linux"
+    ],
+    "tagline": "Edit and composite video with a Linux multitrack timeline",
+    "description": "Flowblade is a multitrack non-linear video editor for Linux. Combine video, audio, and graphics on a timeline, trim clips, add transitions and filters, and render finished sequences. It includes compositing tools, audio synchronization, text tools, and batch encoding. The editor is GPL-3.0 licensed; available media formats depend on the installed MLT and FFmpeg components.",
+    "useCases": [
+      "Assemble and trim clips into a finished video sequence",
+      "Composite graphics and video with transitions and filters",
+      "Synchronize audio and render multiple output clips"
+    ],
+    "github": "https://github.com/jliljebl/flowblade",
+    "repositoryId": "33242423",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 3104,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.072Z",
+    "pushedAt": "2026-10-29T13:40:03Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/jliljebl/flowblade",
+      "https://github.com/jliljebl/flowblade/blob/master/README.md",
+      "https://github.com/jliljebl/flowblade/blob/master/LICENSE",
+      "https://jliljebl.github.io/flowblade/"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README explicitly scopes Flowblade to Linux and links flowblade-trunk/docs/INSTALLING.md.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-29T13:40:03Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "ef4cda51d4a9f2b4d1f19e33cd55010062f50130",
+        "licensePath": "LICENSE",
+        "licenseSha": "3c4e824816c9dc42091dcedeee54d1c8f2cdb5ff"
+      },
+      "baselineMatches": [],
+      "httpsVerified": {
+        "url": "https://jliljebl.github.io/flowblade/",
+        "status": 200,
+        "title": "Flowblade - Free & Libre Video Editor",
+        "checkedAt": "2026-11-02T10:25:37.465Z"
+      }
+    }
+  },
+  {
+    "name": "HyperFrames",
+    "slug": "hyperframes",
+    "categorySlug": "video-audio",
+    "url": "https://hyperframes.heygen.com",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "video-rendering",
+      "motion-graphics",
+      "html-video",
+      "cli"
+    ],
+    "tagline": "Turn HTML compositions into rendered videos",
+    "description": "HyperFrames provides a desktop application and command-line workflow for authoring video compositions with HTML, CSS, media, and seekable animations. Preview a composition, reuse catalog components, and render an MP4 locally or through your own automation. The code is Apache-2.0 licensed. Rendering hardware, hosted infrastructure, optional AI model access, and external media services can have separate costs.",
+    "useCases": [
+      "Create a video composition from HTML and CSS",
+      "Preview and render reusable motion graphics locally",
+      "Automate video output with the command-line interface"
+    ],
+    "github": "https://github.com/heygen-com/hyperframes",
+    "repositoryId": "1177402105",
+    "licenseSpdxId": "Apache-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 77383,
+    "githubStarsObservedAt": "2026-11-02T10:24:51.089Z",
+    "pushedAt": "2026-11-02T10:21:19Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/heygen-com/hyperframes",
+      "https://github.com/heygen-com/hyperframes/blob/main/README.md",
+      "https://github.com/heygen-com/hyperframes/blob/main/LICENSE",
+      "https://hyperframes.heygen.com"
+    ],
+    "reviewNotes": {
+      "basis": "Official repository metadata, README, license text, and referenced installation documentation. The upstream application was not installed or executed.",
+      "installation": "README lists macOS, Windows, and Linux desktop downloads and an npm CLI with init, preview and render commands. The desktop/CLI product workflow is the scope, not a promise that all hosted services are free.",
+      "license": "Recognized SPDX metadata and the standard license text were inspected; third-party components may retain separate notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-02T10:21:19Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "e76e22f63cd7b6f5ffce43d522781bbf30efdf6c",
+        "licensePath": "LICENSE",
+        "licenseSha": "ae06b37e1c5116ccfaa615ac25ec1aabf5658d8c"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "Tangent",
+    "slug": "tangent",
+    "categorySlug": "writing-notes",
+    "tagline": "Write linked Markdown notes with a visual navigation history",
+    "description": "Tangent is a local Markdown note-writing and knowledge-management application. Link notes with wiki links, follow connected navigation maps, use sliding panels and focus modes, and search note collections with its query language. The Apache-2.0 desktop application has Windows, macOS, and Linux build targets and downloadable binaries, including a Flathub package.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "markdown",
+      "notes",
+      "knowledge-management",
+      "local-first"
+    ],
+    "useCases": [
+      "Write and connect a local collection of Markdown notes",
+      "Explore linked notes through navigation maps and sliding panels",
+      "Search a research notebook with its query language"
+    ],
+    "url": "https://www.tangentnotes.com/",
+    "github": "https://github.com/suchnsuch/Tangent",
+    "repositoryId": "518874712",
+    "licenseSpdxId": "Apache-2.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 583,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-10-29T11:47:42Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/suchnsuch/Tangent",
+      "https://github.com/suchnsuch/Tangent/blob/main/README.md",
+      "https://github.com/suchnsuch/Tangent/blob/main/LICENSE.txt",
+      "https://github.com/suchnsuch/Tangent/blob/main/apps/tangent-electron/package.json",
+      "https://www.tangentnotes.com/"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README links download and Flathub pages; tangent-electron package.json explicitly includes macOS/Windows/Linux packaging targets.",
+      "license": "Official Apache-2.0 license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-29T11:47:42Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "65ea0cedc7495d555e33f86c55416da1294f9522",
+        "licensePath": "LICENSE.txt",
+        "licenseSha": "f49a4e16e68b128803cc2dcea614603632b04eac"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "TreeSheets",
+    "slug": "treesheets",
+    "categorySlug": "writing-notes",
+    "tagline": "Organize notes and plans in nested spreadsheet-style grids",
+    "description": "TreeSheets combines nested grids with text and images to organize notes, plans, and structured information. Its hierarchical layout can serve as an outliner, compact mind map, or planning sheet without requiring a conventional relational database. The Zlib-licensed desktop application provides Windows, macOS, and Linux binaries and keeps documents in local files.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "outliner",
+      "notes",
+      "mind-mapping",
+      "desktop"
+    ],
+    "useCases": [
+      "Outline research notes in a nested grid",
+      "Plan projects and requirements with hierarchical cells",
+      "Arrange tasks and ideas in a compact visual document"
+    ],
+    "url": "https://strlen.com/treesheets/",
+    "github": "https://github.com/aardappel/treesheets",
+    "repositoryId": "10671623",
+    "licenseSpdxId": "Zlib",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 3187,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-11-01T18:59:12Z",
+    "defaultBranch": "master",
+    "sources": [
+      "https://github.com/aardappel/treesheets",
+      "https://github.com/aardappel/treesheets/blob/master/README.md",
+      "https://github.com/aardappel/treesheets/blob/master/ZLIB_LICENSE.txt",
+      "https://strlen.com/treesheets/"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README links Windows/macOS/Linux release binaries and Linux packages; ZLIB_LICENSE.txt reviewed.",
+      "license": "Official Zlib license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-11-01T18:59:12Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "3d687a62351d39bff0962a7d524529429cc62f99",
+        "licensePath": "ZLIB_LICENSE.txt",
+        "licenseSha": "2f9fa7088afad8c426106baa901c752157ec197c"
+      },
+      "baselineMatches": []
+    }
+  },
+  {
+    "name": "zk",
+    "slug": "zk",
+    "categorySlug": "writing-notes",
+    "tagline": "Manage a plain-text Zettelkasten from the command line",
+    "description": "zk helps maintain a Markdown-based personal wiki or Zettelkasten from the terminal. Create notes from templates, filter by tags and links, and integrate the notebook with an existing editor through LSP or editor plugins. The GPL-3.0 tool supports macOS, Linux, and Windows builds. It manages notes while leaving editing and web publishing to other applications.",
+    "platforms": [
+      "Mac",
+      "Windows",
+      "Linux"
+    ],
+    "tags": [
+      "markdown",
+      "zettelkasten",
+      "cli",
+      "notes"
+    ],
+    "useCases": [
+      "Create linked notes from reusable templates",
+      "Find notes by tags, links, or mentions",
+      "Connect a plain-text notebook to an existing editor"
+    ],
+    "url": "https://zk-org.github.io/zk/",
+    "github": "https://github.com/zk-org/zk",
+    "repositoryId": "323932509",
+    "licenseSpdxId": "GPL-3.0",
+    "reviewedAt": "2026-11-02",
+    "pricing": "OPEN_SOURCE",
+    "isOpenSource": true,
+    "githubStars": 2865,
+    "githubStarsObservedAt": "2026-11-02T10:21:18.300Z",
+    "pushedAt": "2026-10-31T19:10:41Z",
+    "defaultBranch": "main",
+    "sources": [
+      "https://github.com/zk-org/zk",
+      "https://github.com/zk-org/zk/blob/main/README.md",
+      "https://github.com/zk-org/zk/blob/main/LICENSE",
+      "https://zk-org.github.io/zk/"
+    ],
+    "reviewNotes": {
+      "basis": "Official GitHub metadata, README, license text and referenced installation/release documentation were reviewed. Upstream applications were not installed or executed.",
+      "installation": "README documents release binaries, Homebrew, Nix, Linux packages and source builds; it notes unsigned Windows binaries and recommends a source build in that case.",
+      "license": "Official GPL-3.0 license text and repository documentation were inspected; bundled components retain their own notices.",
+      "maintainedRepository": {
+        "archived": false,
+        "fork": false,
+        "isTemplate": false,
+        "pushedAt": "2026-10-31T19:10:41Z"
+      },
+      "evidence": {
+        "readmePath": "README.md",
+        "readmeSha": "475dd6ff08b9c7478c9a66f44fd524da27305f67",
+        "licensePath": "LICENSE",
+        "licenseSha": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7"
+      },
+      "baselineMatches": []
+    }
+  }
+]

@@ -4,6 +4,17 @@ Product changes to Toools. Product versions use major.minor.patch numbering.
 
 <!-- Generated from src/data/changelog.json. Edit that file, then run npm run release:notes. -->
 
+## [0.2.2] — 2026-11-02
+
+More tools for creative and everyday work
+
+Forty-two reviewed GitHub tools broaden fifteen categories, from visual AI and graphics to databases, desktop productivity, and team infrastructure.
+
+### Added
+
+- 42 reviewed GitHub tools across fifteen categories, including ComfyUI, Graphite Editor, Kando, Deskflow, mise, Harlequin, and BillionMail.
+- Verified repository and license evidence, dated GitHub star counts, platform scope, and practical use cases for the new listings.
+
 ## [0.2.1] — 2026-11-02
 
 More useful tools from GitHub
