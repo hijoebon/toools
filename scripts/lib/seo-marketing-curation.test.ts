@@ -5,6 +5,8 @@ import { PGlite } from "@electric-sql/pglite";
 import { buildSeoMarketingCurationSql, type SeoMarketingTool } from "./seo-marketing-curation";
 import { marketingGeoStage, marketingGrowthStack } from "../../src/lib/marketing-growth-stack";
 
+type DatabaseRow = Record<string, unknown>;
+
 const tool: SeoMarketingTool = {
   name: "Example SEO", slug: "example-seo", tagline: "SEO audits and AI search visibility",
   description: "A publisher's SEO tool; self-hosting and model API costs apply.",
@@ -48,7 +50,7 @@ async function reviewedList(): Promise<SeoMarketingTool[]> {
 const postizLegacyUrl = "https://www.producthunt.com/r/DTE56DREXBP3M6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+github-trending-plus+%28ID%3A+285454%29";
 
 async function pendingPostiz(postgres: PGlite, status = "PENDING", url = postizLegacyUrl) {
-  await postgres.query(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,source,"sourceUrl","viewCount","clickCount","updatedAt")
+  await postgres.query<DatabaseRow>(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,source,"sourceUrl","viewCount","clickCount","updatedAt")
     VALUES ('ph-postiz','Postiz','postiz','Product Hunt launch tagline','Product Hunt launch description',$1,'automation',$2::"ToolStatus",'PRODUCT_HUNT','https://www.producthunt.com/products/postiz',31,9,now())`, [url, status]);
 }
 
@@ -61,7 +63,7 @@ test("an explicitly reviewed Product Hunt alias reuses pending Postiz and migrat
     assert.ok(postiz.sources.includes("https://www.producthunt.com/products/postiz"));
     const sql = buildSeoMarketingCurationSql([postiz]);
     await postgres.exec(sql);
-    const row = (await postgres.query(`SELECT id,slug,tagline,description,url,status::text,source::text,"sourceUrl","viewCount","clickCount","updatedAt" FROM "Tool"`)).rows[0];
+    const row = (await postgres.query<DatabaseRow>(`SELECT id,slug,tagline,description,url,status::text,source::text,"sourceUrl","viewCount","clickCount","updatedAt" FROM "Tool"`)).rows[0];
     assert.deepEqual({ ...row, updatedAt: undefined }, {
       id: "ph-postiz", slug: "postiz", tagline: "Product Hunt launch tagline", description: "Product Hunt launch description",
       url: new URL(postiz.url).href, status: "APPROVED", source: "PRODUCT_HUNT", sourceUrl: "https://www.producthunt.com/products/postiz",
@@ -74,9 +76,9 @@ test("an explicitly reviewed Product Hunt alias reuses pending Postiz and migrat
     assert.deepEqual(discovery.metadata.legacyUrls, [postizLegacyUrl]);
     assert.ok(discovery.metadata.sources.includes("https://www.producthunt.com/products/postiz"));
     await postgres.exec(sql);
-    assert.equal((await postgres.query(`SELECT * FROM "Tool"`)).rows.length, 1);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 1);
-    assert.deepEqual((await postgres.query(`SELECT "updatedAt" FROM "Tool" WHERE id='ph-postiz'`)).rows[0].updatedAt, row.updatedAt);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "Tool"`)).rows.length, 1);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, 1);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT "updatedAt" FROM "Tool" WHERE id='ph-postiz'`)).rows[0].updatedAt, row.updatedAt);
   } finally { await postgres.close(); }
 });
 
@@ -87,13 +89,13 @@ test("reviewed legacy aliases preserve approved and rejected URLs, counters, and
       await pendingPostiz(postgres, status);
       const postiz = (await reviewedList()).find((candidate) => candidate.slug === "postiz")!;
       await postgres.exec(buildSeoMarketingCurationSql([postiz]));
-      assert.deepEqual((await postgres.query(`SELECT id,slug,url,status::text,source::text,"sourceUrl","viewCount","clickCount" FROM "Tool"`)).rows, [{
+      assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT id,slug,url,status::text,source::text,"sourceUrl","viewCount","clickCount" FROM "Tool"`)).rows, [{
         id: "ph-postiz", slug: "postiz", url: postizLegacyUrl, status, source: "PRODUCT_HUNT",
         sourceUrl: "https://www.producthunt.com/products/postiz", viewCount: 31, clickCount: 9,
       }]);
       if (status === "REJECTED") {
-        assert.equal((await postgres.query(`SELECT * FROM "ToolIdentity"`)).rows.length, 0);
-        assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+        assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolIdentity"`)).rows.length, 0);
+        assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
       }
     } finally { await postgres.close(); }
   }
@@ -106,9 +108,9 @@ test("a matching Postiz slug without its explicitly reviewed URL alias still rol
     const postiz = (await reviewedList()).find((candidate) => candidate.slug === "postiz")!;
     await assert.rejects(postgres.exec(buildSeoMarketingCurationSql([{ ...postiz, legacyUrls: undefined }])), /Slug conflict/);
     await postgres.exec("ROLLBACK;");
-    assert.equal((await postgres.query(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
-    assert.equal((await postgres.query(`SELECT url FROM "Tool" WHERE id='ph-postiz'`)).rows[0].url, postizLegacyUrl);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT url FROM "Tool" WHERE id='ph-postiz'`)).rows[0].url, postizLegacyUrl);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
   } finally { await postgres.close(); }
 });
 
@@ -120,7 +122,7 @@ test("legacy URLs match exact reviewed spellings rather than unreviewed tracking
     const postiz = (await reviewedList()).find((candidate) => candidate.slug === "postiz")!;
     await assert.rejects(postgres.exec(buildSeoMarketingCurationSql([postiz])), /Slug conflict/);
     await postgres.exec("ROLLBACK;");
-    assert.equal((await postgres.query(`SELECT url FROM "Tool" WHERE id='ph-postiz'`)).rows[0].url, unreviewedUrl);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT url FROM "Tool" WHERE id='ph-postiz'`)).rows[0].url, unreviewedUrl);
   } finally { await postgres.close(); }
 });
 
@@ -130,13 +132,13 @@ test("an alias matching another existing listing rolls back the complete reviewe
     await pendingPostiz(postgres);
     const tools = await reviewedList();
     const postiz = tools.find((candidate) => candidate.slug === "postiz")!;
-    await postgres.query(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"updatedAt")
+    await postgres.query<DatabaseRow>(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"updatedAt")
       VALUES ('official-postiz','Other Postiz','another-postiz','Other','Other',$1,'automation','APPROVED',now())`, [postiz.url]);
     await assert.rejects(postgres.exec(buildSeoMarketingCurationSql(tools)), /Identity conflict.*multiple existing listings/);
     await postgres.exec("ROLLBACK;");
-    assert.equal((await postgres.query(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
-    assert.equal((await postgres.query(`SELECT * FROM "Tool"`)).rows.length, 2);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "Tool"`)).rows.length, 2);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
   } finally { await postgres.close(); }
 });
 
@@ -158,20 +160,20 @@ test("growth publication preserves original stages and resolves GEO recommendati
   const postgres = await database();
   try {
     await oldGrowthStack(postgres);
-    const otherStack = (await postgres.query(`SELECT name,tagline,description,"updatedAt" FROM "Stack" WHERE id='unrelated'`)).rows[0];
+    const otherStack = (await postgres.query<DatabaseRow>(`SELECT name,tagline,description,"updatedAt" FROM "Stack" WHERE id='unrelated'`)).rows[0];
     const tools = await reviewedList();
     const oneGlanse = tools.find((candidate) => candidate.slug === "oneglanse")!;
-    await postgres.query(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"viewCount","clickCount","updatedAt")
+    await postgres.query<DatabaseRow>(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"viewCount","clickCount","updatedAt")
       VALUES ('legacy-geo','Existing GEO','legacy-geo','Existing review','Existing review',$1,'automation','APPROVED',19,4,now())`, [oneGlanse.url]);
     const sql = buildSeoMarketingCurationSql(tools);
     await postgres.exec(sql);
-    const stack = (await postgres.query(`SELECT id,name,slug,tagline,description,"sortOrder","updatedAt" FROM "Stack" WHERE id='growth'`)).rows[0];
+    const stack = (await postgres.query<DatabaseRow>(`SELECT id,name,slug,tagline,description,"sortOrder","updatedAt" FROM "Stack" WHERE id='growth'`)).rows[0];
     assert.equal(stack.name, marketingGrowthStack.name);
     assert.equal(stack.slug, marketingGrowthStack.slug);
     assert.equal(stack.tagline, marketingGrowthStack.tagline);
     assert.equal(stack.description, marketingGrowthStack.description);
     assert.equal(stack.sortOrder, 6);
-    const stages = (await postgres.query(`SELECT id,name,description,"editorNote","sortOrder" FROM "Stage" WHERE "stackId"='growth' ORDER BY "sortOrder"`)).rows;
+    const stages = (await postgres.query<DatabaseRow>(`SELECT id,name,description,"editorNote","sortOrder" FROM "Stage" WHERE "stackId"='growth' ORDER BY "sortOrder"`)).rows;
     assert.equal(stages.length, 5);
     for (const [index, expected] of marketingGrowthStack.stages.entries()) {
       assert.equal(stages[index].name, expected.name);
@@ -180,18 +182,18 @@ test("growth publication preserves original stages and resolves GEO recommendati
       assert.equal(stages[index].sortOrder, expected.sortOrder);
     }
     assert.deepEqual(stages.filter((stage) => stage.name !== marketingGeoStage.name).map((stage) => stage.id), ["keyword", "content", "distribution", "measurement"]);
-    const recommendations = (await postgres.query(`SELECT t.id,t.slug,r."sortOrder" FROM "StageRecommendation" r
+    const recommendations = (await postgres.query<DatabaseRow>(`SELECT t.id,t.slug,r."sortOrder" FROM "StageRecommendation" r
       JOIN "Stage" s ON s.id=r."stageId" JOIN "Tool" t ON t.id=r."toolId"
       WHERE s."stackId"='growth' AND s.name='GEO & AI Visibility' ORDER BY r."sortOrder"`)).rows;
     assert.deepEqual(recommendations.map((row) => row.slug), marketingGeoStage.tools.map((pick) => pick.slug === "oneglanse" ? "legacy-geo" : pick.slug));
     assert.deepEqual(recommendations.map((row) => row.sortOrder), [0, 1, 2]);
-    assert.equal((await postgres.query(`SELECT * FROM "StageRecommendation" WHERE "stageId"='keyword' AND "toolId"='core-tool'`)).rows.length, 1);
-    assert.deepEqual((await postgres.query(`SELECT "viewCount","clickCount" FROM "Tool" WHERE id='legacy-geo'`)).rows, [{ viewCount: 19, clickCount: 4 }]);
-    assert.deepEqual((await postgres.query(`SELECT name,tagline,description,"updatedAt" FROM "Stack" WHERE id='unrelated'`)).rows[0], otherStack);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "StageRecommendation" WHERE "stageId"='keyword' AND "toolId"='core-tool'`)).rows.length, 1);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT "viewCount","clickCount" FROM "Tool" WHERE id='legacy-geo'`)).rows, [{ viewCount: 19, clickCount: 4 }]);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT name,tagline,description,"updatedAt" FROM "Stack" WHERE id='unrelated'`)).rows[0], otherStack);
     await postgres.exec(sql);
-    assert.deepEqual((await postgres.query(`SELECT id,name,description,"editorNote","sortOrder" FROM "Stage" WHERE "stackId"='growth' ORDER BY "sortOrder"`)).rows, stages);
-    assert.deepEqual((await postgres.query(`SELECT "updatedAt" FROM "Stack" WHERE id='growth'`)).rows[0].updatedAt, stack.updatedAt);
-    assert.equal((await postgres.query(`SELECT * FROM "StageRecommendation" r JOIN "Stage" s ON s.id=r."stageId" WHERE s."stackId"='growth' AND s.name='GEO & AI Visibility'`)).rows.length, 3);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT id,name,description,"editorNote","sortOrder" FROM "Stage" WHERE "stackId"='growth' ORDER BY "sortOrder"`)).rows, stages);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT "updatedAt" FROM "Stack" WHERE id='growth'`)).rows[0].updatedAt, stack.updatedAt);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "StageRecommendation" r JOIN "Stage" s ON s.id=r."stageId" WHERE s."stackId"='growth' AND s.name='GEO & AI Visibility'`)).rows.length, 3);
   } finally { await postgres.close(); }
 });
 
@@ -201,13 +203,13 @@ test("GEO publication does not recommend or revive a rejected matching tool", as
     await oldGrowthStack(postgres);
     const tools = await reviewedList();
     const oneGlanse = tools.find((candidate) => candidate.slug === "oneglanse")!;
-    await postgres.query(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"updatedAt")
+    await postgres.query<DatabaseRow>(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"updatedAt")
       VALUES ('rejected-geo','Rejected GEO','rejected-geo','Rejected','Rejected',$1,'automation','REJECTED',now())`, [oneGlanse.url]);
-    await postgres.query(`INSERT INTO "ToolIdentity" (key,"toolId") VALUES ($1,'rejected-geo')`, ["github-id:" + oneGlanse.repositoryId]);
+    await postgres.query<DatabaseRow>(`INSERT INTO "ToolIdentity" (key,"toolId") VALUES ($1,'rejected-geo')`, ["github-id:" + oneGlanse.repositoryId]);
     await postgres.exec(buildSeoMarketingCurationSql(tools));
-    assert.equal((await postgres.query(`SELECT status::text FROM "Tool" WHERE id='rejected-geo'`)).rows[0].status, "REJECTED");
-    assert.equal((await postgres.query(`SELECT * FROM "StageRecommendation" WHERE "toolId"='rejected-geo'`)).rows.length, 0);
-    assert.equal((await postgres.query(`SELECT * FROM "StageRecommendation" r JOIN "Stage" s ON s.id=r."stageId" WHERE s.name='GEO & AI Visibility'`)).rows.length, 2);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT status::text FROM "Tool" WHERE id='rejected-geo'`)).rows[0].status, "REJECTED");
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "StageRecommendation" WHERE "toolId"='rejected-geo'`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "StageRecommendation" r JOIN "Stage" s ON s.id=r."stageId" WHERE s.name='GEO & AI Visibility'`)).rows.length, 2);
   } finally { await postgres.close(); }
 });
 
@@ -215,13 +217,13 @@ test("an unrelated or incomplete reviewed batch leaves the existing growth workf
   const postgres = await database();
   try {
     await oldGrowthStack(postgres);
-    const before = (await postgres.query(`SELECT * FROM "Stack" ORDER BY id`)).rows;
-    const stages = (await postgres.query(`SELECT * FROM "Stage" ORDER BY id`)).rows;
+    const before = (await postgres.query<DatabaseRow>(`SELECT * FROM "Stack" ORDER BY id`)).rows;
+    const stages = (await postgres.query<DatabaseRow>(`SELECT * FROM "Stage" ORDER BY id`)).rows;
     await postgres.exec(buildSeoMarketingCurationSql([tool]));
     const oneGlanse = (await reviewedList()).find((candidate) => candidate.slug === "oneglanse")!;
     await postgres.exec(buildSeoMarketingCurationSql([oneGlanse]));
-    assert.deepEqual((await postgres.query(`SELECT * FROM "Stack" ORDER BY id`)).rows, before);
-    assert.deepEqual((await postgres.query(`SELECT * FROM "Stage" ORDER BY id`)).rows, stages);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT * FROM "Stack" ORDER BY id`)).rows, before);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT * FROM "Stage" ORDER BY id`)).rows, stages);
   } finally { await postgres.close(); }
 });
 
@@ -229,13 +231,13 @@ test("GEO stage ambiguity rolls back the complete category, tool, and workflow p
   const postgres = await database();
   try {
     await oldGrowthStack(postgres);
-    await postgres.query(`INSERT INTO "Stage" (id,name,"sortOrder","stackId") VALUES ('geo-a',$1,4,'growth'),('geo-b',$1,5,'growth')`, [marketingGeoStage.name]);
+    await postgres.query<DatabaseRow>(`INSERT INTO "Stage" (id,name,"sortOrder","stackId") VALUES ('geo-a',$1,4,'growth'),('geo-b',$1,5,'growth')`, [marketingGeoStage.name]);
     await assert.rejects(postgres.exec(buildSeoMarketingCurationSql(await reviewedList())), /Growth stage conflict.*multiple existing stages/);
     await postgres.exec("ROLLBACK;");
-    assert.equal((await postgres.query(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
-    assert.equal((await postgres.query(`SELECT name FROM "Stack" WHERE id='growth'`)).rows[0].name, "Marketing & SEO Growth");
-    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
-    assert.equal((await postgres.query(`SELECT * FROM "Tool"`)).rows.length, 1);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT name FROM "Stack" WHERE id='growth'`)).rows[0].name, "Marketing & SEO Growth");
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "Tool"`)).rows.length, 1);
   } finally { await postgres.close(); }
 });
 
@@ -243,9 +245,9 @@ test("curation does not create an incomplete growth workflow when the target sta
   const postgres = await database();
   try {
     await postgres.exec(buildSeoMarketingCurationSql(await reviewedList()));
-    assert.equal((await postgres.query(`SELECT * FROM "Stack"`)).rows.length, 0);
-    assert.equal((await postgres.query(`SELECT * FROM "Stage"`)).rows.length, 0);
-    assert.equal((await postgres.query(`SELECT * FROM "StageRecommendation"`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "Stack"`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "Stage"`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "StageRecommendation"`)).rows.length, 0);
   } finally { await postgres.close(); }
 });
 
@@ -258,7 +260,7 @@ test("reviewed curation creates repeatable GitHub listings, tags and provenance 
     await postgres.exec(`UPDATE "Tool" SET "viewCount"=17,"clickCount"=3 WHERE slug='example-seo';`);
     const before = (await postgres.query<{ createdAt: Date; updatedAt: Date }>(`SELECT "createdAt","updatedAt" FROM "Tool"`)).rows[0];
     await postgres.exec(sql);
-    const result = (await postgres.query(`SELECT t.name,t.slug,t.status::text,t.source::text,t.description,t."viewCount",t."clickCount",t."useCases",t."createdAt",t."updatedAt",c.name AS category,c.slug AS "categorySlug" FROM "Tool" t JOIN "Category" c ON c.id=t."categoryId"`)).rows;
+    const result = (await postgres.query<DatabaseRow>(`SELECT t.name,t.slug,t.status::text,t.source::text,t.description,t."viewCount",t."clickCount",t."useCases",t."createdAt",t."updatedAt",c.name AS category,c.slug AS "categorySlug" FROM "Tool" t JOIN "Category" c ON c.id=t."categoryId"`)).rows;
     assert.equal(result.length, 1);
     assert.equal(result[0].category, "SEO & GEO & Marketing");
     assert.equal(result[0].categorySlug, "seo-marketing");
@@ -270,8 +272,8 @@ test("reviewed curation creates repeatable GitHub listings, tags and provenance 
     assert.deepEqual(result[0].useCases, tool.useCases);
     assert.deepEqual(result[0].createdAt, before.createdAt);
     assert.deepEqual(result[0].updatedAt, before.updatedAt);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolIdentity"`)).rows.length, 3);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolTag"`)).rows.length, 2);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolIdentity"`)).rows.length, 3);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolTag"`)).rows.length, 2);
     const discovery = (await postgres.query<{ metadata: Record<string, unknown> }>(`SELECT metadata FROM "ToolDiscovery" WHERE source='GITHUB_REPOSITORY'`)).rows;
     assert.equal(discovery.length, 1);
     assert.deepEqual(discovery[0].metadata.sources, tool.sources);
@@ -284,7 +286,7 @@ test("curation reuses a legacy website under another slug and preserves its prim
   try {
     await postgres.exec(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,source,"sourceUrl","viewCount","clickCount","useCases","updatedAt") VALUES ('old','Existing tool','legacy-seo','Handwritten tagline','Handwritten review','http://www.seo.example.com','automation','APPROVED','AWESOME_LIST','https://github.com/example/directory',29,8,ARRAY['Existing case'],now());`);
     await postgres.exec(buildSeoMarketingCurationSql([tool]));
-    const rows = (await postgres.query(`SELECT id,slug,tagline,description,source::text,"sourceUrl","categoryId",github,"viewCount","clickCount","useCases",pricing::text,"isOpenSource" FROM "Tool"`)).rows;
+    const rows = (await postgres.query<DatabaseRow>(`SELECT id,slug,tagline,description,source::text,"sourceUrl","categoryId",github,"viewCount","clickCount","useCases",pricing::text,"isOpenSource" FROM "Tool"`)).rows;
     assert.equal(rows.length, 1);
     assert.equal(rows[0].id, "old");
     assert.equal(rows[0].slug, "legacy-seo");
@@ -299,7 +301,7 @@ test("curation reuses a legacy website under another slug and preserves its prim
     assert.equal(rows[0].pricing, "FREE");
     assert.equal(rows[0].isOpenSource, false);
     assert.deepEqual(rows[0].useCases, ["Existing case", ...tool.useCases]);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery" WHERE source='GITHUB_REPOSITORY'`)).rows.length, 1);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery" WHERE source='GITHUB_REPOSITORY'`)).rows.length, 1);
   } finally { await postgres.close(); }
 });
 
@@ -308,7 +310,7 @@ test("curation reuses GitHub legacy spellings and approves only reviewed pending
   try {
     await postgres.exec(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,github,"categoryId",status,"updatedAt") VALUES ('old','Old','old-name','Old','Old','https://elsewhere.example.com','http://www.GitHub.com/EXAMPLE/SEO.git/','automation','PENDING',now());`);
     await postgres.exec(buildSeoMarketingCurationSql([tool]));
-    assert.deepEqual((await postgres.query(`SELECT id,slug,status::text,"categoryId",pricing::text,"isOpenSource" FROM "Tool"`)).rows, [{ id: "old", slug: "old-name", status: "APPROVED", categoryId: "seo", pricing: "OPEN_SOURCE", isOpenSource: true }]);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT id,slug,status::text,"categoryId",pricing::text,"isOpenSource" FROM "Tool"`)).rows, [{ id: "old", slug: "old-name", status: "APPROVED", categoryId: "seo", pricing: "OPEN_SOURCE", isOpenSource: true }]);
   } finally { await postgres.close(); }
 });
 
@@ -317,9 +319,9 @@ test("a rejected matching listing is not revived or enriched", async () => {
   try {
     await postgres.exec(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId",status,"updatedAt") VALUES ('rejected','Rejected','rejected-seo','Rejected','Rejected','https://seo.example.com/','automation','REJECTED',now());`);
     await postgres.exec(buildSeoMarketingCurationSql([tool]));
-    assert.deepEqual((await postgres.query(`SELECT id,status::text,"categoryId",github FROM "Tool"`)).rows, [{ id: "rejected", status: "REJECTED", categoryId: "automation", github: null }]);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolIdentity"`)).rows.length, 0);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+    assert.deepEqual((await postgres.query<DatabaseRow>(`SELECT id,status::text,"categoryId",github FROM "Tool"`)).rows, [{ id: "rejected", status: "REJECTED", categoryId: "automation", github: null }]);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolIdentity"`)).rows.length, 0);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
   } finally { await postgres.close(); }
 });
 
@@ -332,12 +334,12 @@ test("ambiguous identity and occupied slugs roll back the entire category public
       if (conflict === "repository") await postgres.exec(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,github,"categoryId","updatedAt") VALUES ('one','Other','other','Other','Other','https://seo.example.com/','https://github.com/another/repository','automation',now());`);
       if (conflict === "alias" || conflict === "repository-id") {
         await postgres.exec(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId","updatedAt") VALUES ('one','Other','other','Other','Other','https://seo.example.com/','automation',now());`);
-        await postgres.query(`INSERT INTO "ToolIdentity" (key,"toolId") VALUES ($1,'one')`, [conflict === "alias" ? "repo:other/repository" : "github-id:999999"]);
+        await postgres.query<DatabaseRow>(`INSERT INTO "ToolIdentity" (key,"toolId") VALUES ($1,'one')`, [conflict === "alias" ? "repo:other/repository" : "github-id:999999"]);
       }
       await assert.rejects(postgres.exec(buildSeoMarketingCurationSql([tool])), /conflict/i);
       await postgres.exec("ROLLBACK;");
       assert.equal((await postgres.query<{ name: string }>(`SELECT name FROM "Category" WHERE slug='seo-marketing'`)).rows[0].name, "SEO & Marketing");
-      assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
+      assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, 0);
     } finally { await postgres.close(); }
   }
 });
@@ -347,7 +349,7 @@ test("website matching keeps distinct product paths and query variants separate"
   try {
     await postgres.exec(`INSERT INTO "Tool" (id,name,slug,tagline,description,url,"categoryId","updatedAt") VALUES ('one','Other','other','Other','Other','https://seo.example.com/product?plan=free','automation',now());`);
     await postgres.exec(buildSeoMarketingCurationSql([{ ...tool, url: "https://seo.example.com/Product?plan=pro" }]));
-    assert.equal((await postgres.query(`SELECT * FROM "Tool"`)).rows.length, 2);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "Tool"`)).rows.length, 2);
   } finally { await postgres.close(); }
 });
 
@@ -357,8 +359,8 @@ test("the checked-in reviewed list executes against the real schema", async () =
     const tools: SeoMarketingTool[] = JSON.parse(await readFile("scripts/config/seo-marketing-tools.json", "utf8"));
     await postgres.exec(buildSeoMarketingCurationSql(tools));
     await postgres.exec(buildSeoMarketingCurationSql(tools));
-    assert.equal((await postgres.query(`SELECT * FROM "Tool" WHERE status='APPROVED'`)).rows.length, tools.length);
-    assert.equal((await postgres.query(`SELECT * FROM "ToolDiscovery"`)).rows.length, tools.length);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "Tool" WHERE status='APPROVED'`)).rows.length, tools.length);
+    assert.equal((await postgres.query<DatabaseRow>(`SELECT * FROM "ToolDiscovery"`)).rows.length, tools.length);
   } finally { await postgres.close(); }
 });
 

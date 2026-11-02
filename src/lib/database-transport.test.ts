@@ -41,7 +41,7 @@ test("the real Neon HTTP adapter gets a fresh timeout signal for every request",
     createdSignals.push(signal);
     return signal;
   }));
-  neonConfig.fetchFunction = async (_url, init) => {
+  neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     observedSignals.push(init?.signal);
     return Response.json({ fields: [{ name: "answer", dataTypeID: 23 }], rows: [["1"]], rowCount: 1, command: "SELECT" });
   };
