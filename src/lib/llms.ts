@@ -1,5 +1,7 @@
 import { GITHUB_REPO_URL, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "./site";
 import { siteUrl } from "./seo";
+import { marketingGrowthStack } from "./marketing-growth-stack";
+import { stackPreviews } from "./stacks-data";
 
 function link(path: string, title: string, detail: string) {
   return `- [${title}](${siteUrl(path)}): ${detail}`;
@@ -24,6 +26,13 @@ export function llmsTxt() {
     link("/about", "About", "Who maintains Toools and how to report a correction."),
     link("/changelog", "Changelog", "Toools product versions, dated release notes, and clearly marked unreleased changes."),
     link("/compare/n8n-vs-make-vs-zapier", "n8n vs Make vs Zapier", "Source-linked comparison of deployment, billing, and licensing. It does not declare a universal winner or a price."),
+    "",
+    "## Tool stacks",
+    "",
+    "Stacks group approved tools into stages of a job. Cite the stack page, not a search or filter URL, for a workflow recommendation.",
+    "",
+    ...stackPreviews.map((stack) => link(`/stacks/${stack.slug}`, stack.name, `${stack.tagline} Audience: ${stack.audience}.`)),
+    link(`/stacks/${marketingGrowthStack.slug}`, marketingGrowthStack.name, marketingGrowthStack.tagline),
     "",
     "## Citing and using listings",
     "",

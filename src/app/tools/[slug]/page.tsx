@@ -3,7 +3,7 @@ import Link from "next/link";
 import { loadApprovedTool, toolCardSelect } from "@/lib/tools";
 import { after, connection } from "next/server";
 import { JsonLd } from "@/components/json-ld";
-import { breadcrumbData, pageMetadata, softwareApplicationJsonLd, toolPageDescription } from "@/lib/seo";
+import { breadcrumbData, collectionPageJsonLd, pageMetadata, softwareApplicationJsonLd, toolPageDescription } from "@/lib/seo";
 import { toolEditorial } from "@/lib/tool-editorial";
 import { recordToolMetric } from "@/lib/record-tool-metric";
 import { getToolExternalLinks } from "@/lib/tool-links";
@@ -104,11 +104,21 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   return (
     <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
-      <JsonLd data={breadcrumbData([{ name: "Home", path: "/" }, { name: "Tools", path: "/tools" }, { name: tool.name, path: `/tools/${tool.slug}` }])} />
+      <JsonLd data={breadcrumbData([{ name: "Home", path: "/" }, { name: "Tools", path: "/tools" }, { name: tool.category.name, path: `/categories/${tool.category.slug}` }, { name: tool.name, path: `/tools/${tool.slug}` }])} />
       <JsonLd data={softwareApplicationJsonLd(tool, editorial?.summary)} />
+      {alternatives.length > 0 && (
+        <JsonLd data={collectionPageJsonLd({
+          path: `/tools/${tool.slug}`,
+          name: `Alternatives to ${tool.name}`,
+          description: toolPageDescription({ name: tool.name, tagline: tool.tagline, description: tool.description, pricing: tool.pricing, categoryName: tool.category.name, editorialSummary: editorial?.summary }),
+          items: alternatives.map((alt) => ({ name: alt.name, path: `/tools/${alt.slug}` })),
+        })} />
+      )}
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs text-muted-foreground pt-5 mb-5">
         <Link href="/tools" className="hover:text-foreground transition-colors">Tools</Link>
+        <ChevronRight className="h-3 w-3" />
+        <Link href={`/categories/${tool.category.slug}`} className="hover:text-foreground transition-colors">{tool.category.name}</Link>
         <ChevronRight className="h-3 w-3" />
         <span className="text-foreground font-medium truncate max-w-[200px]">{tool.name}</span>
       </nav>
@@ -124,9 +134,9 @@ export default async function ToolPage({ params }: ToolPageProps) {
               <h1 className="text-[1.75rem] font-extrabold tracking-[-0.025em]">{tool.name}</h1>
               <p className="text-[0.9375rem] text-muted-foreground mt-1">{tool.tagline}</p>
               <div className="flex gap-1.5 mt-2.5 flex-wrap">
-                <span className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[0.6875rem] font-medium text-muted-foreground">
+                <Link href={`/categories/${tool.category.slug}`} className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[0.6875rem] font-medium text-muted-foreground hover:text-foreground transition-colors">
                   {tool.category.name}
-                </span>
+                </Link>
                 {tool.tags.slice(0, 3).map(({ tag }) => (
                   <span key={tag.id} className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[0.6875rem] font-medium text-muted-foreground">
                     {tag.name}
