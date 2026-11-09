@@ -39,11 +39,11 @@ const selections = [
   },
   {
     name: "Daily batches",
-    description: "Recent additions, featured picks, workflows, and category shortcuts rotate daily at midnight in Asia/Shanghai time. The default selection stays stable within a day while the candidate pool is unchanged. “Another batch” changes the visible selection immediately. When all available items fit, there is no additional batch.",
+    description: "Recent additions, workflows, and category shortcuts rotate daily at midnight in Asia/Shanghai time. The default selection stays stable within a day while the candidate pool is unchanged. “Another batch” changes the visible selection immediately. When all available items fit, there is no additional batch.",
   },
   {
     name: "Editor's Picks",
-    description: "Four tools rotate through up to 24 newest approved featured records. Tools currently visible in Recently Added are excluded, including after either section changes batches. This is transparent discovery rotation, not a personalized recommendation or a quality ranking.",
+    description: "A small, manually maintained set of approved tools for specific tasks. Each card explains who it helps, an advantage over a common approach, a relevant limit, and the official sources checked. The homepage and featured API share the same order. Picks do not rotate daily or use views, votes, stars, or the catalog Featured flag for selection. Recent batches omit these picks.",
   },
   {
     name: "Browse tools",
@@ -98,7 +98,7 @@ export default function HowWeCuratePage() {
         </p>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           Featured status can be set by maintainers or by the Product Hunt import and backfill rules
-          for products with more than 1,000 votes. It is a discovery flag, not a product test score.
+          for products with more than 1,000 votes. It is a catalog discovery flag, not a product test score or eligibility for Editor’s Picks.
         </p>
       </section>
 

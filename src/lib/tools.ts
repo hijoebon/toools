@@ -2,6 +2,7 @@ import { cache } from "react";
 import { prisma } from "./db";
 import { catalogCache } from "./catalog-cache";
 import { catalogOr } from "./catalog-fallback";
+import { editorPicks, resolveEditorPicks } from "./editor-picks";
 
 // Reuse the same category/count entry on home, filters, category pages and SEO.
 export const getCatalogCategories = catalogCache(
@@ -70,37 +71,29 @@ export const getApprovedToolLink = cache(async (slug: string) => {
   return getCachedApprovedToolLink(slug);
 });
 
-const getCachedFeaturedTool = catalogCache(async (slug: string) => {
-  const tool = await prisma.tool.findFirst({
-    where: { slug, status: "APPROVED" },
+const getCuratedCatalogTools = catalogCache(async (slugs: string[]) => {
+  const tools = await prisma.tool.findMany({
+    where: { slug: { in: slugs }, status: "APPROVED" },
     include: {
       category: { select: { name: true, slug: true } },
       tags: { include: { tag: { select: { name: true } } } },
     },
   });
-  return tool ? {
+  return tools.map((tool) => ({
     ...tool,
     createdAt: tool.createdAt.toISOString(),
     updatedAt: tool.updatedAt.toISOString(),
-  } : null;
-}, "featured-tool", { metrics: true });
-
-export async function getRandomApprovedTools(limit = 6, random = Math.random) {
-  // Keep random selection outside the cache so each refresh can draw a new
-  // sample. Per-record entries avoid one unbounded whole-catalog cache item.
-  const pool = [...await getApprovedToolSlugs()];
-  const count = Math.min(pool.length, Math.max(0, Math.floor(limit)));
-  for (let index = 0; index < count; index += 1) {
-    const selected = index + Math.floor(random() * (pool.length - index));
-    [pool[index], pool[selected]] = [pool[selected], pool[index]];
-  }
-  const tools = await Promise.all(pool.slice(0, count).map(({ slug }) => getCachedFeaturedTool(slug)));
-  return tools.filter((tool) => tool !== null);
-}
+  }));
+}, "editor-picks-catalog", { metrics: true });
 
 export async function loadFeaturedTools() {
-  return (await catalogOr(() => getRandomApprovedTools(), [])).value;
+  // Pass the slugs as cache arguments so editing the checked-in set cannot
+  // reuse a previous selection's persisted catalog snapshot.
+  const read = await catalogOr(() => getCuratedCatalogTools(editorPicks.map((pick) => pick.slug)), []);
+  return resolveEditorPicks(read.value);
 }
+
+export type EditorPickTool = Awaited<ReturnType<typeof loadFeaturedTools>>[number];
 
 const getCachedApprovedTool = catalogCache(async (slug: string) => {
   const tool = await prisma.tool.findFirst({

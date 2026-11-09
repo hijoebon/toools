@@ -8,6 +8,7 @@ import path from "node:path";
 import { setTimeout } from "node:timers/promises";
 import { IncrementalCache } from "next/dist/server/lib/incremental-cache";
 import type { PrismaClient } from "@prisma/client";
+import { editorPicks } from "./editor-picks";
 
 test("catalog reads survive cache instances, preserve dates, and invalidate after publication and counter batches", async () => {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), "toools-catalog-cache-"));
@@ -24,12 +25,21 @@ test("catalog reads survive cache instances, preserve dates, and invalidate afte
   let linkReads = 0;
   let featuredReads = 0;
   let databaseAvailable = true;
+  let curatedAvailable = true;
   let viewCount = 10;
   let websiteUrl = "https://approved.example/";
   const slugs = ["approved-tool"];
   runtime.prisma = {
     tool: {
-      findMany: async () => {
+      findMany: async (options: { include?: unknown }) => {
+        if (options.include) {
+          featuredReads += 1;
+          if (!databaseAvailable) throw new Error("database unavailable");
+          return curatedAvailable ? [{
+            slug: editorPicks[0].slug, url: editorPicks[0].catalogUrl, status: "APPROVED",
+            viewCount, createdAt: new Date("2026-10-01T00:00:00Z"), updatedAt: new Date("2026-10-02T00:00:00Z"),
+          }] : [];
+        }
         slugReads += 1;
         if (!databaseAvailable) throw new Error("database unavailable");
         return slugs.map((slug) => ({ slug }));
@@ -98,7 +108,7 @@ test("catalog reads survive cache instances, preserve dates, and invalidate afte
 
   try {
     runtime.__incrementalCache = newCache();
-    const { getApprovedTool, getApprovedToolLink, getApprovedToolSlugs, getCatalogCategories, getRandomApprovedTools } = await import("./tools");
+    const { getApprovedTool, getApprovedToolLink, getApprovedToolSlugs, getCatalogCategories, loadFeaturedTools } = await import("./tools");
     const { CATALOG_CACHE_TAG, CATALOG_METRICS_CACHE_TAG } = await import("./catalog-cache");
 
     assert.equal(await getApprovedTool("missing-one"), null);
@@ -111,8 +121,8 @@ test("catalog reads survive cache instances, preserve dates, and invalidate afte
 
     const first = await getApprovedTool("approved-tool");
     const firstLink = await getApprovedToolLink("approved-tool");
-    const firstFeatured = await getRandomApprovedTools();
-    assert.equal(firstFeatured.length, 1, "small catalogs return every available tool without duplicates");
+    const firstFeatured = await loadFeaturedTools();
+    assert.equal(firstFeatured.length, 1, "only valid curated entries are returned");
     assert.equal(firstFeatured[0].createdAt, "2026-10-01T00:00:00.000Z");
     await getCatalogCategories();
     runtime.__incrementalCache = newCache();
@@ -121,7 +131,7 @@ test("catalog reads survive cache instances, preserve dates, and invalidate afte
     assert.ok(cached?.updatedAt instanceof Date, "Date consumers work on a persisted hit");
     assert.equal(detailReads, 1, "a fresh cache instance reuses disk-backed data");
     assert.deepEqual(await getApprovedToolLink("approved-tool"), firstLink);
-    assert.deepEqual(await getRandomApprovedTools(), firstFeatured);
+    assert.deepEqual(await loadFeaturedTools(), firstFeatured);
     assert.equal(linkReads, 1);
     assert.equal(featuredReads, 1);
 
@@ -130,7 +140,7 @@ test("catalog reads survive cache instances, preserve dates, and invalidate afte
     assert.equal((await getApprovedTool("approved-tool"))?.viewCount, 17);
     await getCatalogCategories();
     await getApprovedToolLink("approved-tool");
-    assert.equal((await getRandomApprovedTools())[0].viewCount, 17);
+    assert.equal((await loadFeaturedTools())[0].viewCount, 17);
     assert.equal(slugReads, 1, "counter batches leave the slug index warm");
     assert.equal(categoryReads, 1, "counter batches leave category counts warm");
     assert.equal(linkReads, 1, "counter batches leave outbound link data warm");
@@ -150,13 +160,14 @@ test("catalog reads survive cache instances, preserve dates, and invalidate afte
     databaseAvailable = true;
     assert.equal((await getApprovedToolSlugs()).length, 2, "a failed refresh does not cache an empty fallback");
 
-    slugs.push(...Array.from({ length: 6 }, (_, index) => `extra-tool-${index}`));
     await invalidate(CATALOG_CACHE_TAG);
-    const sampleOne = await getRandomApprovedTools(6, () => 0);
-    const sampleTwo = await getRandomApprovedTools(6, () => 0.999999);
-    assert.equal(new Set(sampleOne.map((tool) => tool.slug)).size, 6);
-    assert.equal(new Set(sampleTwo.map((tool) => tool.slug)).size, 6);
-    assert.notDeepEqual(sampleOne.map((tool) => tool.slug).sort(), sampleTwo.map((tool) => tool.slug).sort(), "featured refreshes keep sampling outside the shared cache");
+    const sampleOne = await loadFeaturedTools();
+    const sampleTwo = await loadFeaturedTools();
+    assert.deepEqual(sampleOne, sampleTwo, "featured requests preserve editorial order and rationale");
+    assert.deepEqual(sampleOne.map((tool) => tool.slug), [editorPicks[0].slug]);
+    curatedAvailable = false;
+    await invalidate(CATALOG_CACHE_TAG);
+    assert.deepEqual(await loadFeaturedTools(), [], "unpublished picks are omitted after publication invalidation");
 
     slugs.splice(slugs.indexOf("approved-tool"), 1);
     await invalidate(CATALOG_CACHE_TAG);

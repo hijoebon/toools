@@ -73,20 +73,6 @@ export function selectRecentBatch<T extends RecentTool>(
   return pool.filter((tool) => selected.has(tool.slug));
 }
 
-export function selectFeaturedBatch<T extends Identified>(
-  featured: T[],
-  recent: Identified[],
-  offset: number,
-  size = 4,
-): T[] {
-  const excluded = new Set(recent.map((tool) => tool.slug));
-  return selectBatch(
-    featured.filter((tool) => !excluded.has(tool.slug)),
-    size,
-    offset,
-  );
-}
-
 /** Skip offsets producing the same set (e.g. category-variety constraints). */
 export function nextBatchOffset<T extends Identified>(
   offset: number,

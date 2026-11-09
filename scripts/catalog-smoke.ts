@@ -146,6 +146,10 @@ async function main() {
     console.log(`smoke_known_name=${known === "ChatGPT" ? "ChatGPT" : known ? "present" : "absent"}`);
     console.log(`smoke_decision=${decision}`);
     if (decision !== "pass") process.exitCode = 1;
+    if (decision === "pass" && process.argv.includes("--editor-picks-preflight")) {
+      const { runEditorPicksPreflight } = await import("./lib/editor-picks-preflight");
+      await runEditorPicksPreflight(client, connectionUrl);
+    }
   } finally {
     await client.end().catch(() => undefined);
   }
