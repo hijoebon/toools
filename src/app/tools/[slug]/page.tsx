@@ -93,6 +93,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
   const editorial = toolEditorial[slug];
   const externalLinks = getToolExternalLinks(tool);
   const githubLink = externalLinks.find((link) => link.kind === "github");
+  const tagline = tool.tagline.trim();
+  const headingDetail = tagline && tagline.toLowerCase() !== tool.name.trim().toLowerCase()
+    ? tagline
+    : tool.category.name;
 
   const alternatives = (await catalogOr(() => getAlternatives(tool.categoryId, tool.slug), [])).value;
 
@@ -130,9 +134,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
           {/* Tool hero */}
           <div className="flex gap-4 items-start pb-7">
             <ToolAvatar name={tool.name} url={tool.url} iconUrl={tool.iconUrl} className="h-[52px] w-[52px]" />
-            <div>
-              <h1 className="text-[1.75rem] font-extrabold tracking-[-0.025em]">{tool.name}</h1>
-              <p className="text-[0.9375rem] text-muted-foreground mt-1">{tool.tagline}</p>
+            <div className="min-w-0">
+              <h1 className="text-balance break-words text-[1.75rem] font-extrabold leading-tight tracking-[-0.025em]">
+                {tool.name} — {headingDetail}
+              </h1>
               <div className="flex gap-1.5 mt-2.5 flex-wrap">
                 <Link href={`/categories/${tool.category.slug}`} className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[0.6875rem] font-medium text-muted-foreground hover:text-foreground transition-colors">
                   {tool.category.name}
