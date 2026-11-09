@@ -29,23 +29,13 @@ jobs:
         env:
           DATABASE_URL: postgresql://build:build@127.0.0.1/toools
           NEXT_TELEMETRY_DISABLED: '1'
-      - name: Install isolated browser for visual verification
-        run: |
-          npm install --prefix /tmp/toools-visual-check --no-save --no-package-lock playwright@1.56.1
-          /tmp/toools-visual-check/node_modules/.bin/playwright install --with-deps chromium
+      # Screenshots remain an optional local check; runner browser support must
+      # not block the required real-database catalog and HTTP preflight.
       - name: Prove real catalog and HTTP reads before production
         run: node --import tsx scripts/catalog-smoke.ts --editor-picks-preflight
         env:
           DATABASE_URL: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
           CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
-          EDITOR_PICKS_SCREENSHOT_MODULE: ../editor-picks-screenshots.mjs
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: editor-picks-preflight-screenshots
-          path: reports/editor-picks/*.png
-          if-no-files-found: ignore
-          retention-days: 7
 
   production:
     if: github.event_name == 'push'
