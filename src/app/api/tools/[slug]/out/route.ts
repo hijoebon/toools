@@ -1,5 +1,6 @@
 import { after, connection, NextResponse } from "next/server";
 import { recordToolMetric } from "@/lib/record-tool-metric";
+import { recordUaActorMetric } from "@/lib/ua-actor-metric";
 import { getApprovedToolLink } from "@/lib/tools";
 import { getToolOutboundUrl } from "@/lib/tool-links";
 
@@ -21,7 +22,12 @@ export async function GET(
     return NextResponse.json({ error: "Link not found" }, { status: 404 });
   }
 
-  after(() => recordToolMetric(tool.id, "click"));
+  const userAgent = request.headers.get("user-agent");
+  const purpose = request.headers.get("purpose") ?? request.headers.get("sec-purpose");
+  after(() => {
+    void recordToolMetric(tool.id, "click");
+    void recordUaActorMetric({ metric: "click", userAgent, purpose });
+  });
 
   return NextResponse.redirect(url, 302);
 }

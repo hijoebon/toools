@@ -165,6 +165,24 @@ model ToolTag {
   @@id([toolId, tagId])
 }
 
+
+// Side-path daily UA actor aggregates for human vs bot trend SQL.
+// Does not affect Tool.viewCount / clickCount. Days are UTC (@db.Date).
+model UaActorMetricDaily {
+  day           DateTime @db.Date
+  uaFingerprint String
+  uaPreview     String
+  actorClass    String
+  botFamily     String?
+  metric        String
+  count         Int      @default(0)
+
+  @@id([day, uaFingerprint, metric])
+  @@index([day, actorClass])
+  @@index([day, botFamily])
+  @@index([day, metric])
+}
+
 enum EmbedMode {
   IFRAME
   API

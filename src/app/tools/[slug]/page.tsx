@@ -6,6 +6,8 @@ import { JsonLd } from "@/components/json-ld";
 import { breadcrumbData, collectionPageJsonLd, pageMetadata, softwareApplicationJsonLd, toolPageDescription } from "@/lib/seo";
 import { toolEditorial } from "@/lib/tool-editorial";
 import { recordToolMetric } from "@/lib/record-tool-metric";
+import { recordUaActorMetric } from "@/lib/ua-actor-metric";
+import { headers } from "next/headers";
 import { getToolExternalLinks } from "@/lib/tool-links";
 import type { Metadata } from "next";
 import { ArrowUpRight, ChevronRight, ExternalLink, Star, Triangle } from "lucide-react";
@@ -89,7 +91,13 @@ export default async function ToolPage({ params }: ToolPageProps) {
   }
   const tool = loaded.tool;
 
-  after(() => recordToolMetric(tool.id, "view"));
+  const headerList = await headers();
+  const userAgent = headerList.get("user-agent");
+  const purpose = headerList.get("purpose") ?? headerList.get("sec-purpose");
+  after(() => {
+    void recordToolMetric(tool.id, "view");
+    void recordUaActorMetric({ metric: "view", userAgent, purpose });
+  });
   const editorial = toolEditorial[slug];
   const externalLinks = getToolExternalLinks(tool);
   const githubLink = externalLinks.find((link) => link.kind === "github");
