@@ -8,6 +8,7 @@ import path from "node:path";
 import { notFound } from "next/navigation";
 import { IncrementalCache } from "next/dist/server/lib/incremental-cache";
 import type { PrismaClient } from "@prisma/client";
+import { editorPicks } from "./editor-picks";
 import { catalogOr } from "./catalog-fallback";
 import { siteUrl } from "./seo";
 import { stackPreviews } from "./stacks-data";
@@ -47,8 +48,12 @@ test("catalog routes degrade when the database is unreachable and recover withou
 
   runtime.prisma = {
     tool: {
-      findMany: async () => {
+      findMany: async (options: { include?: unknown }) => {
         if (!databaseAvailable) throw new Error("database unavailable");
+        if (options.include) return [{
+          slug: editorPicks[0].slug, url: editorPicks[0].catalogUrl, status: "APPROVED",
+          createdAt: new Date("2026-10-01T00:00:00Z"), updatedAt: new Date("2026-10-02T00:00:00Z"),
+        }];
         return slugs.map((slug) => ({ slug }));
       },
       findFirst: async ({ where }: { where: { slug: string } }) => {

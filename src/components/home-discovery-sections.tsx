@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { ArrowRight, RefreshCw, Star, Triangle } from "lucide-react";
+import { ArrowRight, RefreshCw } from "lucide-react";
+import { FeaturedSection } from "@/components/featured-section";
+import type { EditorPickTool } from "@/lib/tools";
 import { ToolAvatar } from "@/components/tool-avatar";
 import { ToolEngagement } from "@/components/tool-engagement";
 import { StackIcon } from "@/components/stack-icon";
@@ -12,7 +14,6 @@ import {
   getDailyBatchOffset,
   nextBatchOffset,
   selectBatch,
-  selectFeaturedBatch,
   selectRecentBatch,
   selectRecentPool,
 } from "@/lib/home-discovery";
@@ -58,10 +59,6 @@ const addedDate = new Intl.DateTimeFormat("en", {
   month: "short",
   day: "numeric",
   timeZone: "Asia/Shanghai",
-});
-const compactNumber = new Intl.NumberFormat("en", {
-  notation: "compact",
-  maximumFractionDigits: 1,
 });
 
 function BatchButton({
@@ -144,7 +141,7 @@ export function HomeDiscoverySections({
   hero: ReactNode;
   recentTools: HomeDiscoveryTool[];
   recentUnavailable?: boolean;
-  featuredTools: HomeDiscoveryTool[];
+  featuredTools: EditorPickTool[];
   workflows: HomeWorkflow[];
   categories: HomeCategory[];
   day: number;
@@ -154,12 +151,8 @@ export function HomeDiscoverySections({
     const recent = getDailyBatchOffset(day, 3, recentPool.length, (offset) =>
       selectRecentBatch(recentPool, offset),
     );
-    const initialRecent = selectRecentBatch(recentPool, recent);
     return {
       recent,
-      picks: getDailyBatchOffset(day + 7, 4, featuredTools.length, (offset) =>
-        selectFeaturedBatch(featuredTools, initialRecent, offset),
-      ),
       workflows: getDailyBatchOffset(day, 3, workflows.length, (offset) =>
         selectBatch(workflows, 3, offset),
       ),
@@ -169,7 +162,6 @@ export function HomeDiscoverySections({
     };
   });
   const recent = selectRecentBatch(recentPool, offsets.recent);
-  const picks = selectFeaturedBatch(featuredTools, recent, offsets.picks);
   const selectedWorkflows = selectBatch(workflows, 3, offsets.workflows);
   const selectedCategories = selectBatch(categories, 8, offsets.categories);
   const nextRecent = nextBatchOffset(
@@ -177,12 +169,6 @@ export function HomeDiscoverySections({
     3,
     recentPool.length,
     (offset) => selectRecentBatch(recentPool, offset),
-  );
-  const nextPicks = nextBatchOffset(
-    offsets.picks,
-    4,
-    featuredTools.length,
-    (offset) => selectFeaturedBatch(featuredTools, recent, offset),
   );
   const nextWorkflows = nextBatchOffset(
     offsets.workflows,
@@ -354,79 +340,7 @@ export function HomeDiscoverySections({
         </div>
       </section>
 
-      {picks.length > 0 && (
-        <section className="py-9 sm:py-12" aria-labelledby="picks-heading">
-          <div className={container}>
-            <SectionHeading
-              id="picks-heading"
-              title="Editor's Picks"
-              description="Featured tools to explore today"
-              href="/tools?featured=1"
-              label="editor's picks"
-              next={nextPicks}
-              onClick={change("picks")}
-            />
-            <div
-              aria-live="polite"
-              aria-atomic="true"
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
-            >
-              {picks.map((tool) => (
-                <Link
-                  key={tool.slug}
-                  href={`/tools/${tool.slug}`}
-                  prefetch={false}
-                  className={cardLink}
-                >
-                  <article className="hover-lift flex h-full flex-col rounded-xl border border-border/80 bg-card p-4 shadow-warm-xs">
-                    <div className="flex items-center gap-2.5">
-                      <ToolAvatar
-                        name={tool.name}
-                        url={tool.url}
-                        iconUrl={tool.iconUrl}
-                        className="h-8 w-8"
-                      />
-                      <h3 className="text-sm font-semibold group-hover:text-primary">
-                        {tool.name}
-                      </h3>
-                    </div>
-                    <p className="mt-3 line-clamp-2 flex-1 text-xs leading-relaxed text-muted-foreground">
-                      {tool.tagline}
-                    </p>
-                    <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-                      <span className="rounded-full bg-accent px-2 py-0.5 font-medium text-accent-foreground">
-                        {pricingLabels[tool.pricing]}
-                      </span>
-                      {tool.githubStars != null && tool.githubStars > 0 ? (
-                        <span
-                          className="inline-flex items-center gap-1 text-muted-foreground"
-                          aria-label={`${tool.githubStars} GitHub stars`}
-                        >
-                          <Star className="h-3 w-3" aria-hidden="true" />
-                          {compactNumber.format(tool.githubStars)}
-                        </span>
-                      ) : tool.phVotes != null && tool.phVotes > 0 ? (
-                        <span
-                          className="inline-flex items-center gap-1 text-muted-foreground"
-                          aria-label={`${tool.phVotes} Product Hunt votes`}
-                        >
-                          <Triangle className="h-3 w-3" aria-hidden="true" />
-                          {compactNumber.format(tool.phVotes)}
-                        </span>
-                      ) : null}
-                    </div>
-                    <ToolEngagement
-                      viewCount={tool.viewCount}
-                      clickCount={tool.clickCount}
-                      className="mt-3"
-                    />
-                  </article>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <FeaturedSection initialTools={featuredTools} />
 
       {categories.length > 0 && (
         <section

@@ -1,0 +1,54 @@
+name: Editor picks verification
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm run build
+        env:
+          DATABASE_URL: postgresql://build:build@127.0.0.1/toools
+          NEXT_TELEMETRY_DISABLED: '1'
+      # Screenshots remain an optional local check; runner browser support must
+      # not block the required real-database catalog and HTTP preflight.
+      - name: Prove real catalog and HTTP reads before production
+        run: node --import tsx scripts/catalog-smoke.ts --editor-picks-preflight
+        env:
+          DATABASE_URL: ${{ secrets.CLOUD_DATABASE_TEMPLATE }}
+          CLOUD_NEON_API_KEY: ${{ secrets.CLOUD_NEON_API_KEY }}
+
+  production:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci --no-audit --no-fund
+      - name: Verify toools.top after its deployment becomes visible
+        run: node --import tsx scripts/editor-picks-production-smoke.ts

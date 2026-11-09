@@ -5,7 +5,6 @@ import {
   getEditorialDay,
   nextBatchOffset,
   selectBatch,
-  selectFeaturedBatch,
   selectRecentBatch,
   selectRecentPool,
 } from "./home-discovery";
@@ -155,22 +154,5 @@ test("empty and fully displayed collections have no pretend next batch", () => {
     const select = (offset: number) => selectBatch(pool, 4, offset);
     assert.equal(nextBatchOffset(0, 4, pool.length, select), null);
     assert.equal(getDailyBatchOffset(22, 4, pool.length, select), 0);
-  }
-});
-
-test("featured batches exclude visible recent tools after every batch change", () => {
-  const pool = Array.from({ length: 12 }, (_, index) =>
-    tool(String(index), String(index % 3), index),
-  );
-  for (let recentOffset = 0; recentOffset < pool.length; recentOffset++) {
-    const recent = selectRecentBatch(pool, recentOffset);
-    for (let picksOffset = 0; picksOffset < pool.length; picksOffset++) {
-      const picks = selectFeaturedBatch(pool, recent, picksOffset);
-      assert.equal(picks.length, 4);
-      assert.equal(
-        new Set([...recent, ...picks].map((item) => item.slug)).size,
-        7,
-      );
-    }
   }
 });

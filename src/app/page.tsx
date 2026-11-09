@@ -11,7 +11,7 @@ import { getEditorialDay } from "@/lib/home-discovery";
 import { HomeDiscoverySections } from "@/components/home-discovery-sections";
 import { prisma } from "@/lib/db";
 import { catalogCache } from "@/lib/catalog-cache";
-import { getCatalogCategories } from "@/lib/tools";
+import { getCatalogCategories, loadFeaturedTools } from "@/lib/tools";
 
 const homeToolSelect = {
   slug: true,
@@ -27,16 +27,6 @@ const homeToolSelect = {
   phVotes: true,
   category: { select: { name: true, slug: true } },
 } as const;
-
-const getFeaturedTools = catalogCache(async () => {
-  const tools = await prisma.tool.findMany({
-    where: { status: "APPROVED", featured: true },
-    select: homeToolSelect,
-    orderBy: [{ createdAt: "desc" }, { slug: "asc" }],
-    take: 24,
-  });
-  return tools.map((tool) => ({ ...tool, createdAt: tool.createdAt.toISOString() }));
-}, "home-featured", { metrics: true });
 
 async function queryRecentTools() {
   const tools = await prisma.tool.findMany({
@@ -137,16 +127,17 @@ export default async function HomePage() {
   // Keep the daily editorial seed tied to the request, independently of the
   // database snapshot's lifetime.
   await connection();
-  const [featuredRead, recentCached, categoriesRead] = await Promise.all([
-    catalogOr(() => getFeaturedTools(), []),
+  const [featuredTools, recentCached, categoriesRead] = await Promise.all([
+    loadFeaturedTools(),
     catalogOr(() => getRecentTools(), []),
     catalogOr(() => getCatalogCategories(), []),
   ]);
   // A failed cache read is not an empty catalog. Read the database once more
   // before telling visitors that recent additions are unavailable.
   const recentRead = recentCached.degraded ? await catalogOr(queryRecentTools, []) : recentCached;
-  const featuredTools = featuredRead.value;
-  const recentTools = recentRead.value;
+  // The curated set stays fixed. Recent batches avoid those same visible picks.
+  const pickSlugs = new Set(featuredTools.map((tool) => tool.slug));
+  const recentTools = recentRead.value.filter((tool) => !pickSlugs.has(tool.slug));
   const categories = categoriesRead.value;
   const day = getEditorialDay();
   const workflows = stackPreviews.map((stack) => ({
